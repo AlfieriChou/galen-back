@@ -1,30 +1,5 @@
 # How to write swagger document in Sequelize
 
-### swagger
-
-* path
-  * Define the interface baseUrl.
-
-* method
-  * Interface request method.
-
-* tags
-  * Interface tag.
-
-* summary
-  * summary is the interface description.
-
-* query
-  * if you query a data source using query.
-
-* requestBody
-  * requestBody includes body and required.
-  * body: Incoming fields
-  * required: required field
-
-* params
-  * url parameters, usually is id.
-
 1. index
 
   ```javascript
@@ -83,9 +58,34 @@
   }
   ```
 
+### swagger
+
+* path
+  * Define the interface baseUrl.
+
+* method
+  * Interface request method.
+
+* tags
+  * Interface tag.
+
+* summary
+  * summary is the interface description.
+
+* query
+  * if you query a data source using query.
+
+* requestBody
+  * requestBody includes body and required.
+  * body: Incoming fields
+  * required: required field
+
+* params
+  * url parameters, usually is id.
+
 ### output
 
-* Output Type support three types, include array object and number. if you not write output, response will output the model schema.
+* Output Type support three type array object and number. if you not write output, response will output this model attributes.
 
 * type
 
