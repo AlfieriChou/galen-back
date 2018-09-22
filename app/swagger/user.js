@@ -1,27 +1,10 @@
-# How to write swagger document in Sequelize model
+const _ = require('lodash')
+const Sequelize = require('sequelize')
+const db = require('../model')
+const User = db.User
 
-### model
-
-1. props
-
-  ```javascript
-  let props = {
-    id: { type: Sequelize.INTEGER, primaryKey: true, comment: 'id' },
-    phone: { type: Sequelize.STRING, comment: '手机号' },
-    password: { type: Sequelize.STRING, comment: '密码' },
-    nickname: { type: Sequelize.STRING, comment: '昵称' }
-  }
-  ```
-
-2. define sequelize
-
-  ```javascript
-  let User = sequelize.define('users', props)
-  ```
-	
-3. index
-
-  ```javascript
+module.exports = {
+  User,
   index: {
     path: '/users',
     method: 'get',
@@ -37,12 +20,7 @@
       type: 'array',
       result: User.rawAttributes
     }
-  }
-  ```
-	
-4. create
-
-  ```javascript
+  },
   create: {
     path: '/users',
     method: 'post',
@@ -56,17 +34,19 @@
       type: 'object',
       result: User.rawAttributes
     }
-  }
-  ```
-
-5. update
-
-  ```javascript
+  },
+  show: {
+    path: '/users/:id',
+    method: 'get',
+    tags: ['user'],
+    summary: '获取用户详情',
+    params: _.pick(User.rawAttributes, ['id'])
+  },
   update: {
     path: '/users/:id',
     method: 'put',
     tags: ['user'],
-    summary: '更新用户信息',
+    summary: '修改用户信息',
     params: _.pick(User.rawAttributes, ['id']),
     requestBody: {
       body: _.pick(User.rawAttributes, ['phone', 'password'])
@@ -75,4 +55,4 @@
       type: 'number'
     }
   }
-  ```
+}

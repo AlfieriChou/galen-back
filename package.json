@@ -1,0 +1,42 @@
+{
+  "name": "sequelize_swagger",
+  "version": "1.0.0",
+  "description": "Base on sequelize to generate swagger.json",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlfieriChou/sequelize_swagger.git"
+  },
+  "keywords": [
+    "sequelize",
+    "swagger"
+  ],
+  "author": "AlfieriChou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlfieriChou/sequelize_swagger/issues"
+  },
+  "homepage": "https://github.com/AlfieriChou/sequelize_swagger#readme",
+  "dependencies": {
+    "app-root-path": "^2.1.0",
+    "body-parser": "^1.18.3",
+    "consolidate": "^0.15.1",
+    "dir_filenames": "^1.0.6",
+    "express": "^4.16.3",
+    "jsonschema": "^1.2.4",
+    "lodash": "^4.17.11",
+    "morgan": "^1.9.1",
+    "mustache": "^2.3.2",
+    "mysql2": "^1.6.1",
+    "require-directory": "^2.1.1",
+    "sequelize": "^4.38.0",
+    "walk-sync": "^0.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
