@@ -5,6 +5,9 @@ const dir = require('dir_filenames')
 
 const generateSwagger = () => {
   const items = dir(`${appRoot}/app/swagger`)
+  _.remove(items, n => {
+    return n === `${appRoot}/app/swagger/index.js`
+  })
   let methods = []
   let components = {}
   components.schemas = {}
