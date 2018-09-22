@@ -1,25 +1,8 @@
 # How to write swagger document in Sequelize model
 
 ### model
-
-1. props
-
-  ```javascript
-  let props = {
-    id: { type: Sequelize.INTEGER, primaryKey: true, comment: 'id' },
-    phone: { type: Sequelize.STRING, comment: '手机号' },
-    password: { type: Sequelize.STRING, comment: '密码' },
-    nickname: { type: Sequelize.STRING, comment: '昵称' }
-  }
-  ```
-
-2. define sequelize
-
-  ```javascript
-  let User = sequelize.define('users', props)
-  ```
 	
-3. index
+1. index
 
   ```javascript
   index: {
@@ -40,7 +23,7 @@
   }
   ```
 	
-4. create
+2. create
 
   ```javascript
   create: {
@@ -59,7 +42,7 @@
   }
   ```
 
-5. update
+3. update
 
   ```javascript
   update: {
@@ -76,3 +59,83 @@
     }
   }
   ```
+
+### output
+
+* Output Type support three types, above array object and number. if you not write output, response will output the model schema.
+
+* type
+
+  * array
+
+    * output
+      ```javascript
+      output: {
+          type: 'array',
+          result: {
+            { id: Sequelize.INTEGER, comment: 'id' }
+          }
+        }
+      ```
+
+    * json
+      ```javascript
+      {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      }
+      ```
+  * object
+
+    * output
+      ```javascript
+      output: {
+          type: 'object',
+          result: {
+            { id: Sequelize.INTEGER, comment: 'id' }
+          }
+        }
+      ```
+
+    * json
+      ```javascript
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+      ```
+
+  * number
+
+    * output
+      ```javascript
+      output: {
+          type: 'number'
+        }
+      ```
+
+    * json
+      ```javascript
+      {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "number",
+            "description": "返回标识"
+          }
+        }
+      }
+      ```
