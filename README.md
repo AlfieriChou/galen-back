@@ -157,7 +157,7 @@
         "properties": {
           "result": {
             "type": "number",
-            "description": "返回标识"
+            "description": "response code"
           }
         }
       }
