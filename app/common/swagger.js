@@ -13,8 +13,7 @@ const generateSwagger = () => {
   components.schemas = {}
   items.forEach(item => {
     let model = require(item)
-    const files = item.split('/')
-    const fileName = files.pop().replace(/\.\w+$/, '')
+    const fileName = item.split('/').pop().replace(/\.\w+$/, '')
     let schemaName = fileName.slice(0, 1).toUpperCase() + fileName.slice(1)
     for (let index in model) {
       if (index === schemaName) {

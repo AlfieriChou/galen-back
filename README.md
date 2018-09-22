@@ -83,7 +83,7 @@
 * params
   * url parameters, usually is id.
 
-### output
+* output
 
 * Output Type support three type array object and number. if you not write output, response will output this model attributes.
 
