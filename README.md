@@ -1,7 +1,30 @@
-# How to write swagger document in Sequelize model
+# How to write swagger document in Sequelize
 
-### model
-	
+### swagger
+
+* path
+  * Define the interface baseUrl.
+
+* method
+  * Interface request method.
+
+* tags
+  * Interface tag.
+
+* summary
+  * summary is the interface description.
+
+* query
+  * if you query a data source using query.
+
+* requestBody
+  * requestBody includes body and required.
+  * body: Incoming fields
+  * required: required field
+
+* params
+  * url parameters, usually is id.
+
 1. index
 
   ```javascript
@@ -9,11 +32,11 @@
     path: '/users',
     method: 'get',
     tags: ['user'],
-    summary: '获取用户列表',
+    summary: 'users list',
     query: Object.assign(
       _.pick(User.rawAttributes, ['nickname']),
       {
-        sort: { type: Sequelize.STRING, comment: '排序 例如：created_at和-created_at' }
+        sort: { type: Sequelize.STRING, comment: 'sort eg: created_at -created_at' }
       }
     ),
     output: {
@@ -30,7 +53,7 @@
     path: '/users',
     method: 'post',
     tags: ['user'],
-    summary: '创建用户',
+    summary: 'create user',
     requestBody: {
       body: _.pick(User.rawAttributes, ['phone', 'password']),
       required: ['phone', 'password']
@@ -49,7 +72,7 @@
     path: '/users/:id',
     method: 'put',
     tags: ['user'],
-    summary: '更新用户信息',
+    summary: 'update user',
     params: _.pick(User.rawAttributes, ['id']),
     requestBody: {
       body: _.pick(User.rawAttributes, ['phone', 'password'])
@@ -62,7 +85,7 @@
 
 ### output
 
-* Output Type support three types, above array object and number. if you not write output, response will output the model schema.
+* Output Type support three types, include array object and number. if you not write output, response will output the model schema.
 
 * type
 
