@@ -52,7 +52,7 @@ let property = (attribute, options) => {
   }
   if (type instanceof Sequelize.JSON ||
     type instanceof Sequelize.JSONB) {
-    return { type: 'any', description: comment }
+    return { type: 'object', description: comment }
   }
   if (type instanceof Sequelize.VIRTUAL) {
     return Object.assign(type.returnType, { description: comment }) ? property({ type: type.returnType, allowNull: type.allowNull, description: comment }, options) : { type: addNull ? ['string', 'null'] : 'string', description: comment }
