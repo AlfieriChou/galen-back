@@ -1,3 +1,5 @@
+const easyMonitor = require('easy-monitor')
+easyMonitor('Sequelize swagger')
 const express = require('express')
 const BodyParser = require('body-parser')
 const router = require('./app/routes/index')
