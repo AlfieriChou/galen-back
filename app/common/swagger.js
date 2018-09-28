@@ -3,7 +3,7 @@ const _ = require('lodash')
 const appRoot = require('app-root-path')
 const dir = require('dir_filenames')
 
-const generateSwagger = () => {
+const generateSwagger = (info) => {
   const items = dir(`${appRoot}/app/swagger`)
   _.remove(items, n => {
     return n === `${appRoot}/app/swagger/index.js`
@@ -125,20 +125,7 @@ const generateSwagger = () => {
   }
   let swagger = {}
   swagger.openapi = '3.0.0'
-  swagger.info = {
-    'title': 'Demo API document',
-    'version': 'v3',
-    'description': 'Using swagger3.0 & sequelize to generate document',
-    'contact': {
-      'name': 'AlfieriChou',
-      'email': 'alfierichou@gmail.com',
-      'url': 'https://alfierichou.com'
-    },
-    'license': {
-      'name': 'MIT',
-      'url': 'https://github.com/AlfieriChou/joi_swagger_three/blob/master/LICENSE'
-    }
-  }
+  swagger.info = info
   swagger.paths = mergeMethod
   swagger.components = components
   return swagger
