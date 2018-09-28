@@ -32,7 +32,6 @@
     "morgan": "^1.9.1",
     "mustache": "^2.3.2",
     "mysql2": "^1.6.1",
-    "require-directory": "^2.1.1",
     "sequelize": "^4.38.0",
     "walk-sync": "^0.3.3"
   },
