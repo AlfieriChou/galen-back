@@ -76,6 +76,15 @@ class JsonSchema {
       let attribute = model.rawAttributes[attributeName]
       if (attribute) {
         schema.properties[attributeName] = property(attribute, options)
+        let field = schema.properties[attributeName]
+        const associations = model.associations
+        if (model.associations && !field.description) {
+          for (let linkField in associations) {
+            if (attributeName === associations[linkField].options.foreignKey) {
+              field.description = associations[linkField].options.comment
+            }
+          }
+        }
       }
     }
     return schema
