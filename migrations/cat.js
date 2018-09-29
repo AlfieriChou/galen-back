@@ -15,6 +15,11 @@ module.exports = (queryInterface, Sequelize) => {
         )
       }
     },
-    () => { return queryInterface.addColumn('cat', 'weight', Sequelize.FLOAT) }
+    async () => {
+      const describe = await queryInterface.describeTable('cat')
+      if (!describe.weight) {
+        return queryInterface.addColumn('cat', 'weight', Sequelize.FLOAT)
+      }
+    }
   ]
 }
