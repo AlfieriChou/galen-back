@@ -14,6 +14,7 @@ module.exports = (queryInterface, Sequelize) => {
           }
         )
       }
-    }
+    },
+    () => { return queryInterface.addColumn('cat', 'weight', Sequelize.FLOAT) }
   ]
 }
