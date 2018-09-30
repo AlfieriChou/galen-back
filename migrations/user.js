@@ -18,6 +18,15 @@ module.exports = (Sequelize) => {
       field: 'description',
       type: { type: Sequelize.TEXT },
       after: 'avator'
+    },
+    {
+      opt: 'removeColumn',
+      table: 'user',
+      field: 'avator'
     }
+    // {
+    //   opt: 'drop',
+    //   table: 'user'
+    // }
   ]
 }

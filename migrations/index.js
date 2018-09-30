@@ -37,6 +37,22 @@ fs.readdirSync(__dirname).map(file => {
           }
         })
       }
+      if (_.isPlainObject(migration) && migration.opt === 'removeColumn') {
+        return funcArray.push(async () => {
+          const describe = await queryInterface.describeTable(migration.table)
+          if (describe[migration.field]) {
+            return queryInterface.removeColumn(migration.table, migration.field)
+          }
+        })
+      }
+      if (_.isPlainObject(migration) && migration.opt === 'drop') {
+        return funcArray.push(async () => {
+          const tables = await queryInterface.showAllTables()
+          if (tables.indexOf(migration.table) > -1) {
+            return queryInterface.dropTable(migration.table)
+          }
+        })
+      }
     })
     tasks = _.union(tasks, funcArray)
   }
