@@ -18,9 +18,9 @@ module.exports = (queryInterface, Sequelize) => {
     async () => {
       const describe = await queryInterface.describeTable('cat')
       if (!describe.weight) {
-        return queryInterface.addColumn('cat', 'weight', Sequelize.FLOAT)
+        return queryInterface.addColumn('cat', 'weight', { type: Sequelize.FLOAT, after: 'name' })
       }
     },
-    { table: 'cat', field: 'length', type: 'FLOAT' }
+    { table: 'cat', field: 'length', type: 'FLOAT', after: 'weight' }
   ]
 }

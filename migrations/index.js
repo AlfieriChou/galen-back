@@ -25,7 +25,7 @@ fs.readdirSync(__dirname).map(file => {
         return funcArray.push(async () => {
           const describe = await queryInterface.describeTable(migration.table)
           if (!describe[migration.field]) {
-            return queryInterface.addColumn(migration.table, migration.field, Sequelize[migration.type])
+            return queryInterface.addColumn(migration.table, migration.field, { type: Sequelize[migration.type], after: migration.after })
           }
         })
       }
