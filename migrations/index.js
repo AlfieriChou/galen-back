@@ -19,7 +19,19 @@ let tasks = []
 fs.readdirSync(__dirname).map(file => {
   if (file !== 'index.js') {
     let migrations = require(path.join(__dirname, file))(queryInterface, Sequelize)
-    tasks = _.union(tasks, migrations)
+    let funcArray = []
+    migrations.map(migration => {
+      if (_.isPlainObject(migration)) {
+        return funcArray.push(async () => {
+          const describe = await queryInterface.describeTable(migration.table)
+          if (!describe[migration.field]) {
+            return queryInterface.addColumn(migration.table, migration.field, Sequelize[migration.type])
+          }
+        })
+      }
+      return funcArray.push(migration)
+    })
+    tasks = _.union(tasks, funcArray)
   }
 })
 

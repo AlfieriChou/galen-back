@@ -20,6 +20,7 @@ module.exports = (queryInterface, Sequelize) => {
       if (!describe.weight) {
         return queryInterface.addColumn('cat', 'weight', Sequelize.FLOAT)
       }
-    }
+    },
+    { table: 'cat', field: 'length', type: 'FLOAT' }
   ]
 }
