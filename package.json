@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "migrations": "node ./migrations",
+    "migration": "node ./migrations/migration.js",
+    "drop": "node ./migrations/drop.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
