@@ -11,7 +11,7 @@ const generateSwagger = (info) => {
   let methods = []
   let components = {}
   components.schemas = {}
-  items.forEach(item => {
+  items.map(item => {
     let model = require(item)
     const fileName = item.split('/').pop().replace(/\.\w+$/, '')
     let schemaName = fileName.slice(0, 1).toUpperCase() + fileName.slice(1)
