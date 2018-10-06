@@ -1,0 +1,10 @@
+{
+  "kind": "Namespace",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "sequelize_swagger",
+    "labels": {
+      "name": "sequelize_swagger"
+    }
+  }
+}
