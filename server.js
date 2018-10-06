@@ -3,6 +3,7 @@ const BodyParser = require('body-parser')
 const router = require('./app/routes/index')
 const morgan = require('morgan')
 const engines = require('consolidate')
+const path = require('path')
 
 const app = express()
 
@@ -11,7 +12,7 @@ app.use(BodyParser.json())
 
 app.use(morgan('dev'))
 
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(path.resolve('./public')))
 app.engine('html', engines.mustache)
 app.set('view engine', 'html')
 

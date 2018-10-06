@@ -7,6 +7,7 @@
     "start": "nodemon server.js",
     "db:migrate": "node ./migrations/migration.js",
     "db:drop": "node ./migrations/drop.js",
+    "lint": "standard --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -39,6 +40,7 @@
     "walk-sync": "^0.3.3"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.4",
+    "standard": "^12.0.1"
   }
 }
