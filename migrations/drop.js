@@ -6,22 +6,20 @@ const Sequelize = require('sequelize')
 const queryInterface = require('./index')
 const files = ['README.md', 'index.js', 'drop.js', 'migration.js']
 let tasks = []
-fs.readdirSync(__dirname).map(file => {
-  if (files.indexOf(file) < 0) {
-    let migrations = require(path.join(__dirname, file))(Sequelize)
-    let funcArray = []
-    migrations.map(migration => {
-      if (_.isPlainObject(migration) && migration.opt === 'drop') {
-        return funcArray.push(async () => {
-          const tables = await queryInterface.showAllTables()
-          if (tables.indexOf(migration.table) > -1) {
-            return queryInterface.dropTable(migration.table)
-          }
-        })
-      }
-    })
-    tasks = _.union(tasks, funcArray)
-  }
+fs.readdirSync(__dirname + '/migration').map(file => {
+  let migrations = require(path.join(__dirname + '/migration', file))(Sequelize)
+  let funcArray = []
+  migrations.map(migration => {
+    if (_.isPlainObject(migration) && migration.opt === 'drop') {
+      return funcArray.push(async () => {
+        const tables = await queryInterface.showAllTables()
+        if (tables.indexOf(migration.table) > -1) {
+          return queryInterface.dropTable(migration.table)
+        }
+      })
+    }
+  })
+  tasks = _.union(tasks, funcArray)
 })
 Promise
   .reduce(tasks, (total, task) => Promise.resolve().then(task), 0)
