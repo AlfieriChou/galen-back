@@ -4,7 +4,7 @@ const _ = require('lodash')
 global.Promise = require('bluebird')
 const Sequelize = require('sequelize')
 const queryInterface = require('./index')
-const files = ['index.js', 'drop.js', 'migration.js']
+const files = ['README.md', 'index.js', 'drop.js', 'migration.js']
 
 let tasks = []
 fs.readdirSync(__dirname).map(file => {
