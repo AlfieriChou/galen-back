@@ -3,11 +3,12 @@ const fs = require('fs')
 const _ = require('lodash')
 global.Promise = require('bluebird')
 const Sequelize = require('sequelize')
+const appRoot = require('app-root-path')
 const queryInterface = require('./index')
 
 let tasks = []
-fs.readdirSync(__dirname + '/migration').map(file => {
-  let migrations = require(path.join(__dirname + '/migration', file))(Sequelize)
+fs.readdirSync(`${appRoot}/migrations/migration`).map(file => {
+  let migrations = require(path.join(`${appRoot}/migrations/migration`, file))(Sequelize)
   let funcArray = []
   migrations.map(migration => {
     if (_.isPlainObject(migration) && migration.opt === 'create') {
