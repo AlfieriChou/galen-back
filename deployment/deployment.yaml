@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sequelize_swagger
+spec:
+  type: NodePort
+  ports:
+  - name: kjsp
+    port: 4000
+    protocol: TCP
+    targetPort: 4000
+  selector:
+    app: sequelize_swagger
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: sequelize_swagger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sequelize_swagger
+  template:
+    metadata:
+      labels:
+        app: sequelize_swagger
+    spec:
+      containers:
+      - name: sequelize_swagger-pod
+        image: alfierichou/sequelize_swagger:0.0.1
+        ports:
+        - containerPort: 4000
