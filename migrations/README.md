@@ -1,11 +1,14 @@
 ### migration
 
-* opt --> create, addColumn, changeColumn, reanmeColumn, removeColumn, drop
+* opt --> create, addColumn, changeColumn, reanmeColumn, removeColumn, drop, query
 * table --> opt table
 * column --> table fields
 * field --> field
 * type --> field type
 * after --> field after
+* fieldBefore --> field name before
+* fieldAfter --> field name after
+* sql --> sql
 
 #### create
 
@@ -55,8 +58,8 @@
 {
     opt: 'renameColumn',
     table: 'user',
-    before: 'description',
-    after: 'descriptions'
+    fieldBefore: 'description',
+    fieldAfter: 'descriptions'
 }
 ```
 
@@ -76,5 +79,14 @@
 {
     opt: 'drop',
     table: 'user'
+}
+```
+
+#### query
+
+```javascript
+{
+    opt: 'query',
+    sql: 'ALTER TABLE goods CHANGE name name INT;'
 }
 ```

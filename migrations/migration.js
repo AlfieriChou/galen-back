@@ -51,6 +51,11 @@ fs.readdirSync(`${appRoot}/migrations/migration`).map(file => {
         }
       })
     }
+    if (_.isPlainObject(migration) && migration.opt === 'query') {
+      return funcArray.push(async () => {
+        return queryInterface.sequelize.query(migration.sql)
+      })
+    }
   })
   tasks = _.union(tasks, funcArray)
 })

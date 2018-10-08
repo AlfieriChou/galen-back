@@ -38,8 +38,12 @@ module.exports = (Sequelize) => {
     {
       opt: 'renameColumn',
       table: 'goods',
-      before: 'description',
-      after: 'descriptions'
+      fieldBefore: 'description',
+      fieldAfter: 'descriptions'
+    },
+    {
+      opt: 'query',
+      sql: 'ALTER TABLE goods CHANGE name name INT;'
     }
   ]
 }
