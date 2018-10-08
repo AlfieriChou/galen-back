@@ -34,6 +34,12 @@ module.exports = (Sequelize) => {
       type: {
         type: Sequelize.STRING
       }
+    },
+    {
+      opt: 'renameColumn',
+      table: 'goods',
+      before: 'description',
+      after: 'descriptions'
     }
   ]
 }

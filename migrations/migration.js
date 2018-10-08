@@ -35,6 +35,14 @@ fs.readdirSync(`${appRoot}/migrations/migration`).map(file => {
         }
       })
     }
+    if (_.isPlainObject(migration) && migration.opt === 'renameColumn') {
+      return funcArray.push(async () => {
+        const describe = await queryInterface.describeTable(migration.table)
+        if (describe[migration.before]) {
+          return queryInterface.renameColumn(migration.table, migration.before, migration.after)
+        }
+      })
+    }
     if (_.isPlainObject(migration) && migration.opt === 'removeColumn') {
       return funcArray.push(async () => {
         const describe = await queryInterface.describeTable(migration.table)

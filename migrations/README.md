@@ -1,6 +1,6 @@
 ### migration
 
-* opt --> create, addColumn, changeColumn, removeColumn, drop
+* opt --> create, addColumn, changeColumn, reanmeColumn, removeColumn, drop
 * table --> opt table
 * column --> table fields
 * field --> field
@@ -46,6 +46,17 @@
     type: {
         type: Sequelize.STRING
     }
+}
+```
+
+#### renameColumn
+
+```javascript
+{
+    opt: 'renameColumn',
+    table: 'user',
+    before: 'description',
+    after: 'descriptions'
 }
 ```
 
