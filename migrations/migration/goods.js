@@ -26,6 +26,14 @@ module.exports = (Sequelize) => {
         onDelete: 'set null'
       },
       after: 'id'
+    },
+    {
+      opt: 'changeColumn',
+      table: 'goods',
+      field: 'description',
+      type: {
+        type: Sequelize.STRING
+      }
     }
   ]
 }

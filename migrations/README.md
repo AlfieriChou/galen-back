@@ -1,6 +1,6 @@
 ### migration
 
-* opt --> create, addColumn, removeColumn, drop
+* opt --> create, addColumn, changeColumn, removeColumn, drop
 * table --> opt table
 * column --> table fields
 * field --> field
@@ -33,6 +33,19 @@
     field: 'description',
     type: { type: Sequelize.TEXT },
     after: 'avator'
+}
+```
+
+#### changeColumn
+
+```javascript
+{
+    opt: 'changeColumn',
+    table: 'user',
+    field: 'description',
+    type: {
+        type: Sequelize.STRING
+    }
 }
 ```
 
