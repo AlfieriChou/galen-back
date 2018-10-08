@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sequelize_swagger_ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  namespace: default
+spec:
+  rules:
+  - host: helloworld.alfierichou.com
+    - http:
+      paths:
+      - backend:
+        serviceName: sequelize_swagger
+        servicePort: 4000
