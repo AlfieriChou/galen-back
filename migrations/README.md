@@ -1,6 +1,6 @@
 ### migration
 
-* opt --> create, addColumn, changeColumn, reanmeColumn, removeColumn, drop, query
+* opt --> create, addColumn, changeColumn, reanmeColumn, removeColumn, drop, addIndex, query
 * table --> opt table
 * column --> table fields
 * field --> field
@@ -79,6 +79,20 @@
 {
     opt: 'drop',
     table: 'user'
+}
+```
+
+#### addIndex
+
+```javascript
+{
+    opt: 'addIndex',
+    table: 'user',
+    attributes: ['firstname', 'lastname'],
+    options: {
+        indexName: 'SuperDuperIndex',
+        indicesType: 'UNIQUE'
+    }
 }
 ```
 
