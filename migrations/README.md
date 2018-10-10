@@ -96,6 +96,16 @@
 }
 ```
 
+#### removeIndex
+
+```javascript
+{
+    opt: 'removeIndex',
+    table: 'user',
+    attributes: ['firstname']
+}
+```
+
 #### query
 
 ```javascript

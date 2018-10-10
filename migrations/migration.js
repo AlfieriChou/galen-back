@@ -56,6 +56,14 @@ fs.readdirSync(`${appRoot}/migrations/migration`).map(file => {
         return queryInterface.addIndex(migration.table, migration.attributes, migration.options)
       })
     }
+    if (_.isPlainObject(migration) && migration.opt === 'removeIndex') {
+      return funcArray.push(async () => {
+        if (migration['attributes'].length === 1) {
+          return queryInterface.removeIndex(migration.table, migration['attributes'][0])
+        }
+        return queryInterface.removeColumn(migration.table, migration.attributes)
+      })
+    }
     if (_.isPlainObject(migration) && migration.opt === 'query') {
       return funcArray.push(async () => {
         return queryInterface.sequelize.query(migration.sql)
