@@ -55,7 +55,10 @@ let property = (attribute, options) => {
     return { type: 'object', description: comment }
   }
   if (type instanceof Sequelize.VIRTUAL) {
-    return Object.assign(type.returnType, { description: comment }) ? property({ type: type.returnType, allowNull: type.allowNull, description: comment }, options) : { type: addNull ? ['string', 'null'] : 'string', description: comment }
+    return type.returnType ? property({ type: type.returnType, allowNull: type.allowNull, description: comment }, options) : addNull ? { type: ['string', 'null'], description: comment } : { type: 'string', description: comment }
+  }
+  if (type instanceof Sequelize.ARRAY) {
+    return type.type ? { type: 'array', items: property({ type: type.type }) } : { type: 'array', description: comment }
   }
   return { type: (attribute.type.key).toLowerCase(), description: comment }
 }
