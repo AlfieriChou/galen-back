@@ -8,7 +8,11 @@
     "dev": "NODE_ENV=development nodemon server.js",
     "release": "NODE_ENV=release nodemon server.js",
     "db:migrate": "node ./migrations/migration.js",
+    "db:migrate:prod": "node ./migrations/migration.js prod",
+    "db:migrate:release": "node ./migrations/migration.js release",
     "db:drop": "node ./migrations/drop.js",
+    "db:drop:prod": "node ./migrations/drop.js prod",
+    "db:drop: release": "node ./migrations/drop.js release",
     "lint": "standard --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
