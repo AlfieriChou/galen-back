@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlfieriChou/sequelize_swagger.git"
+    "url": "git+https://github.com/AlfieriChou/sequelize_swagger2.0.git"
   },
   "keywords": [
     "sequelize",
@@ -23,9 +23,9 @@
   "author": "AlfieriChou",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AlfieriChou/sequelize_swagger/issues"
+    "url": "https://github.com/AlfieriChou/sequelize_swagger2.0/issues"
   },
-  "homepage": "https://github.com/AlfieriChou/sequelize_swagger#readme",
+  "homepage": "https://github.com/AlfieriChou/sequelize_swagger2.0#readme",
   "dependencies": {
     "app-root-path": "^2.1.0",
     "body-parser": "^1.18.3",
