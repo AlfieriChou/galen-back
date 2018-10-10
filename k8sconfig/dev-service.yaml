@@ -5,7 +5,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - name: kjsp
+  - name: ssp
     port: 4000
     protocol: TCP
     targetPort: 4000

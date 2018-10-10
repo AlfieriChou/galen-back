@@ -4,7 +4,7 @@ metadata:
   name: sequelize_swagger_ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-  namespace: default
+  namespace: ss_namespace
 spec:
   rules:
   - host: helloworld.alfierichou.com
