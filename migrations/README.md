@@ -1,6 +1,6 @@
 ### migration
 
-* opt --> create, addColumn, changeColumn, reanmeColumn, removeColumn, drop, addIndex, query
+* opt --> create, addColumn, changeColumn, reanmeColumn, removeColumn, drop, addIndex, removeIndex, query
 * table --> opt table
 * column --> table fields
 * field --> field

@@ -4,6 +4,7 @@ const router = require('./app/routes/index')
 const morgan = require('morgan')
 const engines = require('consolidate')
 const path = require('path')
+const config = require('./config')
 
 const app = express()
 
@@ -25,7 +26,7 @@ app.use((req, res, next) => {
 
 app.use('/v1/', router)
 
-app.listen(4000)
-console.log(`listening on port 4000`)
+app.listen(config.port)
+console.log(`listening on port ${config.port}`)
 
 module.exports = app

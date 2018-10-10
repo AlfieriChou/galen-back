@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize')
 const appRoot = require('app-root-path')
 const walkSync = require('walk-sync')
+const config = require('../../config')
 
-const sequelize = new Sequelize('test', 'root', '', {
-  host: '127.0.0.1',
+const sequelize = new Sequelize(config.mysql.database, config.mysql.user, config.mysql.password, {
+  host: config.mysql.host,
   dialect: 'mysql',
   pool: {
     max: 10,

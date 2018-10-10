@@ -4,7 +4,9 @@
   "description": "Base on sequelize to generate swagger.json",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "NODE_ENV=production node server.js",
+    "dev": "NODE_ENV=development nodemon server.js",
+    "release": "NODE_ENV=release nodemon server.js",
     "db:migrate": "node ./migrations/migration.js",
     "db:drop": "node ./migrations/drop.js",
     "lint": "standard --fix",
