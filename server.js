@@ -11,8 +11,7 @@ const app = express()
 app.use(BodyParser.urlencoded({ extended: true }))
 app.use(BodyParser.json())
 
-app.use(morgan('dev'))
-
+app.get('env') === 'production' ? app.use(morgan('combined')) : app.use(morgan('dev'))
 app.use(express.static(path.resolve('./public')))
 app.engine('html', engines.mustache)
 app.set('view engine', 'html')
