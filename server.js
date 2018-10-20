@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const engines = require('consolidate')
 const path = require('path')
 const config = require('./config')
+const common = require('./app')
 
 const app = express()
 
