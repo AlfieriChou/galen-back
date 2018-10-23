@@ -14,7 +14,7 @@
     "db:drop:prod": "node ./migrations/drop.js prod",
     "db:drop: release": "node ./migrations/drop.js release",
     "lint": "standard --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc ava"
   },
   "repository": {
     "type": "git",
@@ -47,6 +47,7 @@
     "walk-sync": "^0.3.3"
   },
   "devDependencies": {
+    "ava": "^0.25.0",
     "nodemon": "^1.18.4",
     "standard": "^12.0.1"
   }
