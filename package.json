@@ -33,7 +33,6 @@
   "dependencies": {
     "app-root-path": "^2.1.0",
     "body-parser": "^1.18.3",
-    "bunyan": "^1.8.12",
     "consolidate": "^0.15.1",
     "dir_filenames": "^1.0.6",
     "easy-monitor": "^2.2.5",
