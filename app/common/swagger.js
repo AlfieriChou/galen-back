@@ -109,6 +109,8 @@ const generateSwagger = (info) => {
                 'schema': schema
               }
             }
+          },
+          default: { 'description': 'error payload', 'content': { 'application/json': { 'schema': { 'type': 'object', 'required': ['message', 'code'], 'properties': { 'message': { 'type': 'string' }, 'code': { 'type': 'integer', 'minimum': 100, 'maximum': 600 } } } } }
           }
         }
         let swaggerMethod = {}
