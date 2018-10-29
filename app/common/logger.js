@@ -1,17 +1,37 @@
-const winston = require('winston')
+const { createLogger, format, transports } = require('winston')
 require('winston-daily-rotate-file')
+const fs = require('fs')
 
-const transport = new winston.transports.DailyRotateFile({
-  filename: 'app-%DATE%.log',
-  datePattern: 'YYYY-MM-DD-HH',
-  zippedArchive: true,
-  maxSize: '100m',
-  maxFiles: '30d'
+const env = process.env.NODE_ENV || 'development'
+const logDir = 'logs'
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir)
+}
+
+const dailyRotateFileTransport = new transports.DailyRotateFile({
+  filename: `${logDir}/%DATE%-app.log`,
+  datePattern: 'YYYY-MM-DD'
 })
 
-const logger = new winston.Logger({
+const logger = createLogger({
+  level: env === 'development' ? 'verbose' : 'info',
+  format: format.combine(
+    format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+  ),
   transports: [
-    transport
+    new transports.Console({
+      level: 'info',
+      format: format.combine(
+        format.colorize(),
+        format.printf(
+          info => `${info.timestamp} ${info.level}: ${info.message}`
+        )
+      )
+    }),
+    dailyRotateFileTransport
   ]
 })
 
