@@ -3,11 +3,11 @@ const Validator = require('jsonschema').Validator
 const v = new Validator()
 
 class BaseController {
-  async validate (schema, model, json, options) {
-    const jsonSchema = transform(schema)
+  async validate (model, params) {
+    const jsonSchema = transform(model.requestBody.body)
     const required = model.requestBody.required
     jsonSchema.required = required
-    const result = await v.validate(json, jsonSchema)
+    const result = await v.validate(params, jsonSchema)
     return new Promise((resolve, reject) => {
       if (result.errors[0]) {
         const err = result.errors[0].message

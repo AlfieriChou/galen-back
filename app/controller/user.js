@@ -9,7 +9,7 @@ class UserController extends BaseController {
   async create (req, res) {
     const params = req.body
     try {
-      await super.validate(schema.user.User, schema.user.create, params)
+      await super.validate(schema.user.create, params)
       res.json(params)
     } catch (err) {
       res.status(422).send(err)
