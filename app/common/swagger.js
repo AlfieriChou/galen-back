@@ -104,15 +104,18 @@ const generateSwagger = (info) => {
                 }
                 break
             }
-            content.responses = _.merge(result, result[key] = {
+            let resultObj = {}
+            resultObj[key] = {
               'description': 'response success',
               'content': {
                 'application/json': {
                   'schema': outputSchema
                 }
               }
-            })
+            }
+            result = _.merge(result, resultObj)
           })
+          content.responses = result
         } else {
           content.responses = {
             200: {
