@@ -87,80 +87,11 @@
 
 * output
 
-* Output Type support three type array object and number. if you not write output, response will output this model attributes.
-
-* type
-
-  * array
-
-    * output
-      ```javascript
-      output: {
-          type: 'array',
-          result: {
-            { id: Sequelize.INTEGER, comment: 'id' }
-          }
-        }
-      ```
-
-    * json
-      ```javascript
-      {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      }
-      ```
-  * object
-
-    * output
-      ```javascript
-      output: {
-          type: 'object',
-          result: {
-            { id: Sequelize.INTEGER, comment: 'id' }
-          }
-        }
-      ```
-
-    * json
-      ```javascript
-      {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      }
-      ```
-
-  * number
-
-    * output
-      ```javascript
-      output: {
-          type: 'number'
-        }
-      ```
-
-    * json
-      ```javascript
-      {
-        "type": "object",
-        "properties": {
-          "result": {
-            "type": "number",
-            "description": "response code"
-          }
-        }
-      }
-      ```
+  ```javascript
+  output: {
+    200: {
+      type: 'array',
+      result: User.rawAttributes
+    }
+  }
+  ```
