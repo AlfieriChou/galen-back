@@ -73,44 +73,56 @@ const generateSwagger = (info) => {
           }
           content.requestBody = request.requestBody
         }
-        let result = {}
         if (model[index].output) {
-          const output = model[index].output
-          const typeList = ['array', 'object', 'number']
-          if (typeList.indexOf(output.type) < 0) throw new Error('output type mast ba array or object or number!')
-          switch (output.type) {
-            case 'array':
-              const arrayResult = output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
-              result = {
-                type: 'array',
-                items: arrayResult
-              }
-              break
-            case 'object':
-              const objectResult = output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
-              result = objectResult
-              break
-            case 'number':
-              const code = { type: 'number', description: '返回标识' }
-              result = {
-                type: 'object',
-                properties: {
-                  result: code
+          let result = {}
+          const response = model[index].output
+          const keys = Object.keys(response)
+          keys.map(key => {
+            let outputSchema
+            const output = response[key]
+            const typeList = ['array', 'object', 'number']
+            if (typeList.indexOf(output.type) < 0) throw new Error('output type mast ba array or object or number!')
+            switch (output.type) {
+              case 'array':
+                const arrayResult = output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
+                outputSchema = {
+                  type: 'array',
+                  items: arrayResult
+                }
+                break
+              case 'object':
+                const objectResult = output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
+                outputSchema = objectResult
+                break
+              case 'number':
+                const code = { type: 'number', description: '返回标识' }
+                outputSchema = {
+                  type: 'object',
+                  properties: {
+                    result: code
+                  }
+                }
+                break
+            }
+            content.responses = _.merge(result, result[key] = {
+              'description': 'response success',
+              'content': {
+                'application/json': {
+                  'schema': outputSchema
                 }
               }
-          }
-        }
-        const schema = model[index].output ? result : { $ref: `#/components/schemas/${schemaName}` }
-        content.responses = {
-          200: {
-            'description': 'response success',
-            'content': {
-              'application/json': {
-                'schema': schema
+            })
+          })
+        } else {
+          content.responses = {
+            200: {
+              'description': 'response success',
+              'content': {
+                'application/json': {
+                  'schema': { $ref: `#/components/schemas/${schemaName}` }
+                }
               }
             }
-          },
-          default: { 'description': 'error payload', 'content': { 'application/json': { 'schema': { 'type': 'object', 'required': ['message', 'code'], 'properties': { 'message': { 'type': 'string' }, 'code': { 'type': 'integer', 'minimum': 100, 'maximum': 600 } } } } }
           }
         }
         let swaggerMethod = {}

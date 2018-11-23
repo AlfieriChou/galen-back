@@ -17,8 +17,10 @@ module.exports = {
       }
     ),
     output: {
-      type: 'array',
-      result: User.rawAttributes
+      200: {
+        type: 'array',
+        result: User.rawAttributes
+      }
     }
   },
   create: {
@@ -31,8 +33,10 @@ module.exports = {
       required: ['phone', 'password']
     },
     output: {
-      type: 'object',
-      result: User.rawAttributes
+      200: {
+        type: 'object',
+        result: User.rawAttributes
+      }
     }
   },
   show: {
@@ -52,7 +56,9 @@ module.exports = {
       body: _.pick(User.rawAttributes, ['phone', 'password'])
     },
     output: {
-      type: 'number'
+      200: {
+        type: 'number'
+      }
     }
   }
 }
