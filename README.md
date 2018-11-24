@@ -87,11 +87,44 @@
 
 * output
 
+  * array
+
   ```javascript
   output: {
     200: {
       type: 'array',
       result: User.rawAttributes
+    }
+  }
+  ```
+
+  * object
+  
+  ```javascript
+  output: {
+    200: {
+      type: 'object',
+      result: User.rawAttributes
+    }
+  }
+  ```
+
+  * number
+  
+  ```javascript
+  output: {
+    200: {
+      type: 'number'
+    }
+  }
+  ```
+
+  * string
+  
+  ```javascript
+  output: {
+    200: {
+      type: 'string'
     }
   }
   ```
