@@ -59,7 +59,8 @@ let property = (attribute, options) => {
     return type.returnType ? property({ type: type.returnType, allowNull: type.allowNull, description: comment }, options) : addNull ? { type: ['string', 'null'], description: comment } : { type: 'string', description: comment }
   }
   if (type instanceof Sequelize.ARRAY) {
-    return type.type ? { type: 'array', items: property({ type: type.type }) } : { type: 'array', description: comment }
+    const trans = new JsonSchema()
+    return type.type ? { type: 'array', items: property({ type: type.type }) } : attribute.items ? { type: 'array', items: trans.convert(attribute.items) } : { type: 'array', description: comment }
   }
   return { type: (attribute.type.key).toLowerCase(), description: comment }
 }
