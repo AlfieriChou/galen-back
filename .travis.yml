@@ -6,6 +6,8 @@ install:
   - npm i npminstall && npminstall
 script:
   - npm test
+after_success: 
+  npm run coverage
 branches:
   only:
     - master

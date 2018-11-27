@@ -14,7 +14,8 @@
     "db:drop:prod": "node ./migrations/drop.js prod",
     "db:drop: release": "node ./migrations/drop.js release",
     "lint": "standard --fix",
-    "test": "nyc ava"
+    "test": "NODE_ENV=development nyc mocha --exit",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "repository": {
     "type": "git",
@@ -49,7 +50,12 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "codecov": "^3.1.0",
+    "mocha": "^5.2.0",
     "nodemon": "^1.18.4",
-    "standard": "^12.0.1"
+    "nyc": "^13.1.0",
+    "should": "^13.2.3",
+    "standard": "^12.0.1",
+    "supertest": "^3.3.0"
   }
 }
