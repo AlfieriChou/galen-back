@@ -1,9 +1,9 @@
 const appRoot = require('app-root-path')
 const dir = require('dir_filenames')
 const _ = require('lodash')
-let files = dir(`${appRoot}/src/controller`)
+let files = dir(`${appRoot}/app/controller`)
 _.remove(files, n => {
-  return n === `${appRoot}/src/controller/index.js`
+  return n === `${appRoot}/app/controller/index.js`
 })
 files.map(item => {
   let name = item.split('/').pop().replace(/\.\w+$/, '')
