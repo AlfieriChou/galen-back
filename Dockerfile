@@ -1,11 +1,11 @@
-FROM docker.io/node:8.11.4-alpine
+FROM docker.io/node:8.15-alpine
 
 RUN mkdir /home/app/
 WORKDIR /home/app/
 ADD . /home/app/
 
-RUN cd /home/app/ && npm install
+RUN cd /home/app/ && npm install yarn -g && yarn
 
-EXPOSE 4000
+EXPOSE 3000
 
-CMD npm start
+CMD yarn start
