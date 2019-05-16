@@ -1,71 +1,63 @@
 const Sequelize = require('sequelize')
-let enumProperty = attribute => {
-  return {
-    enum: attribute.values,
-    description: attribute.comment
-  }
-}
-let property = (attribute, options) => {
-  let type = attribute.type
-  let comment = attribute.comment
-  let addNull = attribute.allowNull && options.allowNull
-  if (type instanceof Sequelize.ENUM) return enumProperty(attribute)
-  if (type instanceof Sequelize.BOOLEAN) return { type: addNull ? ['boolean', 'null'] : 'boolean', description: comment }
-  if (type instanceof Sequelize.INTEGER) return { type: addNull ? ['integer', 'null'] : 'integer', format: 'int32', description: comment }
-  if (type instanceof Sequelize.BIGINT) return { type: addNull ? ['integer', 'null'] : 'integer', format: 'int64', description: comment }
-  if (type instanceof Sequelize.FLOAT ||
+
+class JsonSchema {
+  property (attribute, options) {
+    let type = attribute.type
+    let comment = attribute.comment
+    let addNull = attribute.allowNull && options.allowNull
+    if (type instanceof Sequelize.ENUM) return { enum: attribute.values, description: attribute.comment }
+    if (type instanceof Sequelize.BOOLEAN) return { type: addNull ? ['boolean', 'null'] : 'boolean', description: comment }
+    if (type instanceof Sequelize.INTEGER) return { type: addNull ? ['integer', 'null'] : 'integer', format: 'int32', description: comment }
+    if (type instanceof Sequelize.BIGINT) return { type: addNull ? ['integer', 'null'] : 'integer', format: 'int64', description: comment }
+    if (type instanceof Sequelize.FLOAT ||
     type instanceof Sequelize.REAL) {
-    return { type: addNull ? ['number', 'null'] : 'number', format: 'float', description: comment }
-  }
-  if (type instanceof Sequelize.DOUBLE) { return { type: addNull ? ['number', 'null'] : 'number', format: 'double', description: comment } }
-  if (type instanceof Sequelize.DECIMAL) { return { type: addNull ? ['number', 'null'] : 'number', description: comment } }
-  if (type instanceof Sequelize.DATEONLY) { return { type: addNull ? ['string', 'null'] : 'string', format: 'date', description: comment } }
-  if (type instanceof Sequelize.DATE) { return { type: addNull ? ['string', 'null'] : 'string', format: 'date-time', description: comment } }
-  if (type instanceof Sequelize.TIME) { return { type: addNull ? ['string', 'null'] : 'string', description: comment } }
-  if (type instanceof Sequelize.UUID ||
+      return { type: addNull ? ['number', 'null'] : 'number', format: 'float', description: comment }
+    }
+    if (type instanceof Sequelize.DOUBLE) { return { type: addNull ? ['number', 'null'] : 'number', format: 'double', description: comment } }
+    if (type instanceof Sequelize.DECIMAL) { return { type: addNull ? ['number', 'null'] : 'number', description: comment } }
+    if (type instanceof Sequelize.DATEONLY) { return { type: addNull ? ['string', 'null'] : 'string', format: 'date', description: comment } }
+    if (type instanceof Sequelize.DATE) { return { type: addNull ? ['string', 'null'] : 'string', format: 'date-time', description: comment } }
+    if (type instanceof Sequelize.TIME) { return { type: addNull ? ['string', 'null'] : 'string', description: comment } }
+    if (type instanceof Sequelize.UUID ||
     type instanceof Sequelize.UUIDV1 ||
     type instanceof Sequelize.UUIDV4) {
-    return { type: addNull ? ['string', 'null'] : 'string', format: 'uuid', description: comment }
-  }
-  if (type instanceof Sequelize.CHAR ||
+      return { type: addNull ? ['string', 'null'] : 'string', format: 'uuid', description: comment }
+    }
+    if (type instanceof Sequelize.CHAR ||
     type instanceof Sequelize.STRING ||
     type instanceof Sequelize.TEXT ||
     type instanceof Sequelize.UUID ||
     type instanceof Sequelize.DATE ||
     type instanceof Sequelize.DATEONLY ||
     type instanceof Sequelize.TIME) {
-    const schema = { type: addNull ? ['string', 'null'] : 'string' }
-    var maxLength = (type.options && type.options.length) || type._length
-    if (type instanceof Sequelize.TEXT) {
-      switch (maxLength) {
-        case 'tiny': maxLength = 255
-          break
-        case 'medium': maxLength = 16777215
-          break
-        case 'long': maxLength = 4294967295
-          break
+      const schema = { type: addNull ? ['string', 'null'] : 'string' }
+      var maxLength = (type.options && type.options.length) || type._length
+      if (type instanceof Sequelize.TEXT) {
+        switch (maxLength) {
+          case 'tiny': maxLength = 255
+            break
+          case 'medium': maxLength = 16777215
+            break
+          case 'long': maxLength = 4294967295
+            break
+        }
       }
+      if (maxLength) schema.maxLength = maxLength
+      schema.description = comment
+      return schema
     }
-    if (maxLength) schema.maxLength = maxLength
-    schema.description = comment
-    return schema
-  }
-  if (type instanceof Sequelize.JSON ||
+    if (type instanceof Sequelize.JSON ||
     type instanceof Sequelize.JSONB) {
-    const trans = new JsonSchema()
-    return attribute.keys ? trans.convert(attribute.keys) : { type: 'object', properties: {} }
+      return attribute.keys ? this.convert(attribute.keys) : { type: 'object', properties: {} }
+    }
+    if (type instanceof Sequelize.VIRTUAL) {
+      return type.returnType ? this.property({ type: type.returnType, allowNull: type.allowNull, description: comment }, options) : addNull ? { type: ['string', 'null'], description: comment } : { type: 'string', description: comment }
+    }
+    if (type instanceof Sequelize.ARRAY) {
+      return type.type ? { type: 'array', items: this.property({ type: type.type }) } : attribute.items ? { type: 'array', items: this.convert(attribute.items) } : { type: 'array', description: comment }
+    }
+    return { type: (attribute.type.key).toLowerCase(), description: comment }
   }
-  if (type instanceof Sequelize.VIRTUAL) {
-    return type.returnType ? property({ type: type.returnType, allowNull: type.allowNull, description: comment }, options) : addNull ? { type: ['string', 'null'], description: comment } : { type: 'string', description: comment }
-  }
-  if (type instanceof Sequelize.ARRAY) {
-    const trans = new JsonSchema()
-    return type.type ? { type: 'array', items: property({ type: type.type }) } : attribute.items ? { type: 'array', items: trans.convert(attribute.items) } : { type: 'array', description: comment }
-  }
-  return { type: (attribute.type.key).toLowerCase(), description: comment }
-}
-
-class JsonSchema {
   transform (model, options) {
     options = options || {}
     const schema = {
@@ -80,7 +72,7 @@ class JsonSchema {
       }
       let attribute = model.rawAttributes[attributeName]
       if (attribute) {
-        schema.properties[attributeName] = property(attribute, options)
+        schema.properties[attributeName] = this.property(attribute, options)
         let field = schema.properties[attributeName]
         const associations = model.associations
         if (model.associations && !field.description) {
@@ -108,7 +100,7 @@ class JsonSchema {
       }
       let attribute = model[attributeName]
       if (attribute) {
-        schema.properties[attributeName] = property(attribute, options)
+        schema.properties[attributeName] = this.property(attribute, options)
       }
     }
     return schema

@@ -1,13 +1,12 @@
 [![standard][standard-image]][standard-url]
 
 [![Build Status][travis-image]][travis-url]
+[![Greenkeeper badge](https://badges.greenkeeper.io/AlfieriChou/sequelize_swagger2.0.svg)](https://greenkeeper.io/)
 [![codecov][codecov-image]][codecov-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
 [![license][license-image]][license-url]
 
 # How to write swagger document in Sequelize
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/AlfieriChou/sequelize_swagger2.0.svg)](https://greenkeeper.io/)
 
 1. index
 
