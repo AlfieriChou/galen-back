@@ -23,8 +23,10 @@
       }
     ),
     output: {
-      type: 'array',
-      result: User.rawAttributes
+      statusCode: {
+      	type: 'array',
+      	result: User.rawAttributes
+      }
     }
   }
   ```
@@ -42,8 +44,10 @@
       required: ['phone', 'password']
     },
     output: {
-      type: 'object',
-      result: User.rawAttributes
+      statusCode: {
+      	type: 'object',
+      	result: User.rawAttributes
+      }
     }
   }
   ```
@@ -61,7 +65,9 @@
       body: _.pick(User.rawAttributes, ['phone', 'password'])
     },
     output: {
-      type: 'number'
+      statusCode: {
+      	type: 'number'
+      }
     }
   }
   ```
