@@ -38,7 +38,7 @@
     "dir_filenames": "^1.0.6",
     "express": "^4.16.3",
     "jsonschema": "^1.2.4",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "morgan": "^1.9.1",
     "mustache": "^3.0.1",
     "mysql2": "^1.6.1",
