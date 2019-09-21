@@ -9,11 +9,15 @@ const generateSwagger = (info) => {
   const methods = []
   const components = {}
   components.schemas = {}
-  items.map((item) => {
+  items.forEach((item) => {
+    /* eslint-disable import/no-dynamic-require */
+    /* eslint-disable global-require */
     const model = require(item)
+    /* eslint-enable global-require */
+    /* eslint-enable import/no-dynamic-require */
     const fileName = item.split('/').pop().replace(/\.\w+$/, '')
     const schemaName = fileName.slice(0, 1).toUpperCase() + fileName.slice(1)
-    for (const index in model) {
+    Object.keys(model).forEach((index) => {
       if (index === schemaName) {
         const modelSchema = jsonSchema.transform(model[index])
         const schema = {}
@@ -27,7 +31,7 @@ const generateSwagger = (info) => {
         if (model[index].query) {
           content.parameters = []
           const params = jsonSchema.convert(model[index].query)
-          for (const prop in params.properties) {
+          Object.keys(params.properties).forEach((prop) => {
             const field = {}
             field.name = prop
             field.in = 'query'
@@ -37,22 +41,23 @@ const generateSwagger = (info) => {
             }
             field.required = false
             content.parameters.push(field)
-          }
+          })
         }
         if (model[index].params) {
-          content.parameters = []
           const params = jsonSchema.convert(model[index].params)
-          for (const prop in params.properties) {
-            const field = {}
-            field.name = prop
-            field.in = 'path'
-            field.description = params.properties[prop].description
-            field.schema = {
-              type: params.properties[prop].type
-            }
-            field.required = true
-            content.parameters.push(field)
-          }
+          content.parameters = Object.entries(params.properties)
+            .reduce((parameters, [prop, value]) => {
+              const field = {}
+              field.name = prop
+              field.in = 'path'
+              field.description = value.description
+              field.schema = {
+                type: value.type
+              }
+              field.required = true
+              parameters.push(field)
+              return parameters
+            }, [])
         }
         if (model[index].requestBody) {
           const params = jsonSchema.convert(model[index].requestBody.body)
@@ -75,29 +80,27 @@ const generateSwagger = (info) => {
           let result = {}
           const response = model[index].output
           const keys = Object.keys(response)
-          keys.map((key) => {
+          keys.forEach((key) => {
             let outputSchema
             const output = response[key]
             const typeList = ['array', 'object', 'number']
             if (typeList.indexOf(output.type) < 0) throw new Error('output type mast ba array or object or number!')
+            // eslint-disable-next-line default-case
             switch (output.type) {
               case 'array':
-                const arrayResult = output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
                 outputSchema = {
                   type: 'array',
-                  items: arrayResult
+                  items: output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
                 }
                 break
               case 'object':
-                const objectResult = output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
-                outputSchema = objectResult
+                outputSchema = output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
                 break
               case 'number':
-                const code = { type: 'number', description: '返回标识' }
                 outputSchema = {
                   type: 'object',
                   properties: {
-                    result: code
+                    result: { type: 'number', description: '返回标识' }
                   }
                 }
                 break
@@ -132,9 +135,10 @@ const generateSwagger = (info) => {
         swaggerItem[(model[index].path).toString()] = swaggerMethod
         methods.push(swaggerItem)
       }
-    }
+    })
   })
   let mergeMethod = {}
+  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < methods.length; ++i) {
     mergeMethod = _.merge(mergeMethod, methods[i])
   }
