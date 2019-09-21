@@ -7,10 +7,10 @@ const appRoot = require('app-root-path')
 const queryInterface = require('./index')
 
 let tasks = []
-fs.readdirSync(`${appRoot}/migrations/migration`).map(file => {
-  let migrations = require(path.join(`${appRoot}/migrations/migration`, file))(Sequelize)
-  let funcArray = []
-  migrations.map(migration => {
+fs.readdirSync(`${appRoot}/migrations/migration`).forEach((file) => {
+  const migrations = require(path.join(`${appRoot}/migrations/migration`, file))(Sequelize)
+  const funcArray = []
+  migrations.forEach((migration) => {
     if (_.isPlainObject(migration) && migration.opt === 'create') {
       return funcArray.push(async () => {
         const tables = await queryInterface.showAllTables()
@@ -52,22 +52,18 @@ fs.readdirSync(`${appRoot}/migrations/migration`).map(file => {
       })
     }
     if (_.isPlainObject(migration) && migration.opt === 'addIndex') {
-      return funcArray.push(async () => {
-        return queryInterface.addIndex(migration.table, migration.attributes, migration.options)
-      })
+      return funcArray.push(async () => queryInterface.addIndex(migration.table, migration.attributes, migration.options))
     }
     if (_.isPlainObject(migration) && migration.opt === 'removeIndex') {
       return funcArray.push(async () => {
-        if (migration['attributes'].length === 1) {
-          return queryInterface.removeIndex(migration.table, migration['attributes'][0])
+        if (migration.attributes.length === 1) {
+          return queryInterface.removeIndex(migration.table, migration.attributes[0])
         }
         return queryInterface.removeColumn(migration.table, migration.attributes)
       })
     }
     if (_.isPlainObject(migration) && migration.opt === 'query') {
-      return funcArray.push(async () => {
-        return queryInterface.sequelize.query(migration.sql)
-      })
+      return funcArray.push(async () => queryInterface.sequelize.query(migration.sql))
     }
   })
   tasks = _.union(tasks, funcArray)

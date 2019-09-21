@@ -1,11 +1,11 @@
 class BaseService {
   getSort (options) {
-    let result = []
+    const result = []
     options = options.split(',')
-    options.map(item => {
-      let sortArray = []
+    options.map((item) => {
+      const sortArray = []
       item.startsWith('-') || item.startsWith('+') ? sortArray.push(item.substring(1)) : sortArray.push(item)
-      let sort = item.startsWith('-') ? 'desc' : 'asc'
+      const sort = item.startsWith('-') ? 'desc' : 'asc'
       sortArray.push(sort)
       result.push(sortArray)
     })

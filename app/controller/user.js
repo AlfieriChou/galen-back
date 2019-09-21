@@ -6,6 +6,7 @@ class UserController extends BaseController {
     // const params = req.query
     res.json('hello')
   }
+
   async create (req, res) {
     const params = req.body
     try {

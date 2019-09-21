@@ -2,9 +2,9 @@ const Sequelize = require('sequelize')
 
 class JsonSchema {
   property (attribute, options) {
-    let type = attribute.type
-    let comment = attribute.comment
-    let addNull = attribute.allowNull && options.allowNull
+    const { type } = attribute
+    const { comment } = attribute
+    const addNull = attribute.allowNull && options.allowNull
     if (type instanceof Sequelize.ENUM) return { enum: attribute.values, description: attribute.comment }
     if (type instanceof Sequelize.BOOLEAN) return { type: addNull ? ['boolean', 'null'] : 'boolean', description: comment }
     if (type instanceof Sequelize.INTEGER) return { type: addNull ? ['integer', 'null'] : 'integer', format: 'int32', description: comment }
@@ -31,7 +31,7 @@ class JsonSchema {
     type instanceof Sequelize.DATEONLY ||
     type instanceof Sequelize.TIME) {
       const schema = { type: addNull ? ['string', 'null'] : 'string' }
-      var maxLength = (type.options && type.options.length) || type._length
+      let maxLength = (type.options && type.options.length) || type._length
       if (type instanceof Sequelize.TEXT) {
         switch (maxLength) {
           case 'tiny': maxLength = 255
@@ -58,25 +58,26 @@ class JsonSchema {
     }
     return { type: (attribute.type.key).toLowerCase(), description: comment }
   }
+
   transform (model, options) {
     options = options || {}
     const schema = {
       type: 'object',
       properties: {}
     }
-    let exclude = options.exclude || options.private || []
-    let attributes = options.attributes || Object.keys(model.rawAttributes)
-    for (let attributeName of attributes) {
+    const exclude = options.exclude || options.private || []
+    const attributes = options.attributes || Object.keys(model.rawAttributes)
+    for (const attributeName of attributes) {
       if (exclude.indexOf(attributeName) >= 0) {
         continue
       }
-      let attribute = model.rawAttributes[attributeName]
+      const attribute = model.rawAttributes[attributeName]
       if (attribute) {
         schema.properties[attributeName] = this.property(attribute, options)
-        let field = schema.properties[attributeName]
-        const associations = model.associations
+        const field = schema.properties[attributeName]
+        const { associations } = model
         if (model.associations && !field.description) {
-          for (let linkField in associations) {
+          for (const linkField in associations) {
             if (attributeName === associations[linkField].options.foreignKey) {
               field.description = associations[linkField].options.comment
             }
@@ -86,19 +87,20 @@ class JsonSchema {
     }
     return schema
   }
+
   convert (model, options) {
     options = options || {}
     const schema = {
       type: 'object',
       properties: {}
     }
-    let exclude = options.exclude || options.private || []
-    let attributes = Object.keys(model)
-    for (let attributeName of attributes) {
+    const exclude = options.exclude || options.private || []
+    const attributes = Object.keys(model)
+    for (const attributeName of attributes) {
       if (exclude.indexOf(attributeName) >= 0) {
         continue
       }
-      let attribute = model[attributeName]
+      const attribute = model[attributeName]
       if (attribute) {
         schema.properties[attributeName] = this.property(attribute, options)
       }

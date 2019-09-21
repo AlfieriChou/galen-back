@@ -5,12 +5,12 @@ const production = require('./config.prod')
 
 const env = process.env.NODE_ENV || 'development'
 const configs = {
-  development: development,
-  production: production,
-  release: release
+  development,
+  production,
+  release
 }
 const defaultConfig = {
-  env: env
+  env
 }
 const config = _.merge(defaultConfig, configs[env])
 

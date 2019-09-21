@@ -1,7 +1,8 @@
 const _ = require('lodash')
 const Sequelize = require('sequelize')
 const db = require('../model')
-const User = db.User
+
+const { User } = db
 
 module.exports = {
   User,

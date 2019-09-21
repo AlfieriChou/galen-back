@@ -1,28 +1,28 @@
-const app = require('../server')
 const should = require('should')
 const request = require('supertest')
-const describe = require('mocha').describe
-const it = require('mocha').it
+const { describe } = require('mocha')
+const { it } = require('mocha')
+const app = require('../server')
 
-describe('GET /swagger.json!!!', function () {
-  it('respond with json', function () {
+describe('GET /swagger.json!!!', () => {
+  it('respond with json', () => {
     request(app)
       .get('/v1/swagger.json')
       .set('Accept', 'application/json')
       .expect(200)
-      .then(response => {
+      .then((response) => {
         should(response.body).be.an.Object
       })
   })
 })
 
-describe('GET /apidoc!!!', function () {
-  it('response html!!', function () {
+describe('GET /apidoc!!!', () => {
+  it('response html!!', () => {
     request(app)
       .get('/v1/apidoc')
       .set('Accept', 'text/html')
       .expect(200)
-      .then(response => {
+      .then((response) => {
         should(response.body).be.html
       })
   })

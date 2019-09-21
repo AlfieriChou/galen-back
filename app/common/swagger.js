@@ -1,24 +1,22 @@
-const jsonSchema = require('./transform')
 const _ = require('lodash')
 const appRoot = require('app-root-path')
 const dir = require('dir_filenames')
+const jsonSchema = require('./transform')
 
 const generateSwagger = (info) => {
   const items = dir(`${appRoot}/app/swagger`)
-  _.remove(items, n => {
-    return n === `${appRoot}/app/swagger/index.js`
-  })
-  let methods = []
-  let components = {}
+  _.remove(items, n => n === `${appRoot}/app/swagger/index.js`)
+  const methods = []
+  const components = {}
   components.schemas = {}
-  items.map(item => {
-    let model = require(item)
+  items.map((item) => {
+    const model = require(item)
     const fileName = item.split('/').pop().replace(/\.\w+$/, '')
-    let schemaName = fileName.slice(0, 1).toUpperCase() + fileName.slice(1)
-    for (let index in model) {
+    const schemaName = fileName.slice(0, 1).toUpperCase() + fileName.slice(1)
+    for (const index in model) {
       if (index === schemaName) {
         const modelSchema = jsonSchema.transform(model[index])
-        let schema = {}
+        const schema = {}
         schema[schemaName] = modelSchema
         components.schemas = _.merge(components.schemas, schema)
       } else {
@@ -28,14 +26,14 @@ const generateSwagger = (info) => {
         }
         if (model[index].query) {
           content.parameters = []
-          let params = jsonSchema.convert(model[index].query)
-          for (let prop in params.properties) {
-            let field = {}
+          const params = jsonSchema.convert(model[index].query)
+          for (const prop in params.properties) {
+            const field = {}
             field.name = prop
             field.in = 'query'
             field.description = params.properties[prop].description
             field.schema = {
-              'type': params.properties[prop].type
+              type: params.properties[prop].type
             }
             field.required = false
             content.parameters.push(field)
@@ -43,31 +41,31 @@ const generateSwagger = (info) => {
         }
         if (model[index].params) {
           content.parameters = []
-          let params = jsonSchema.convert(model[index].params)
-          for (let prop in params.properties) {
-            let field = {}
+          const params = jsonSchema.convert(model[index].params)
+          for (const prop in params.properties) {
+            const field = {}
             field.name = prop
             field.in = 'path'
             field.description = params.properties[prop].description
             field.schema = {
-              'type': params.properties[prop].type
+              type: params.properties[prop].type
             }
             field.required = true
             content.parameters.push(field)
           }
         }
         if (model[index].requestBody) {
-          let params = jsonSchema.convert(model[index].requestBody.body)
-          let request = {}
+          const params = jsonSchema.convert(model[index].requestBody.body)
+          const request = {}
           request.requestBody = {}
-          let bodySchema = request.requestBody
+          const bodySchema = request.requestBody
           bodySchema.required = true
           bodySchema.content = {
             'application/json': {
-              'schema': {
-                'type': params.type,
-                'properties': params.properties,
-                'required': model[index].requestBody.required
+              schema: {
+                type: params.type,
+                properties: params.properties,
+                required: model[index].requestBody.required
               }
             }
           }
@@ -77,7 +75,7 @@ const generateSwagger = (info) => {
           let result = {}
           const response = model[index].output
           const keys = Object.keys(response)
-          keys.map(key => {
+          keys.map((key) => {
             let outputSchema
             const output = response[key]
             const typeList = ['array', 'object', 'number']
@@ -104,12 +102,12 @@ const generateSwagger = (info) => {
                 }
                 break
             }
-            let resultObj = {}
+            const resultObj = {}
             resultObj[key] = {
-              'description': 'response success',
-              'content': {
+              description: 'response success',
+              content: {
                 'application/json': {
-                  'schema': outputSchema
+                  schema: outputSchema
                 }
               }
             }
@@ -119,18 +117,18 @@ const generateSwagger = (info) => {
         } else {
           content.responses = {
             200: {
-              'description': 'response success',
-              'content': {
+              description: 'response success',
+              content: {
                 'application/json': {
-                  'schema': { $ref: `#/components/schemas/${schemaName}` }
+                  schema: { $ref: `#/components/schemas/${schemaName}` }
                 }
               }
             }
           }
         }
-        let swaggerMethod = {}
+        const swaggerMethod = {}
         swaggerMethod[(model[index].method).toString()] = content
-        let swaggerItem = {}
+        const swaggerItem = {}
         swaggerItem[(model[index].path).toString()] = swaggerMethod
         methods.push(swaggerItem)
       }
@@ -140,7 +138,7 @@ const generateSwagger = (info) => {
   for (let i = 0; i < methods.length; ++i) {
     mergeMethod = _.merge(mergeMethod, methods[i])
   }
-  let swagger = {}
+  const swagger = {}
   swagger.openapi = '3.0.0'
   swagger.info = info
   swagger.paths = mergeMethod

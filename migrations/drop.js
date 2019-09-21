@@ -7,10 +7,10 @@ const appRoot = require('app-root-path')
 const queryInterface = require('./index')
 
 let tasks = []
-fs.readdirSync(`${appRoot}/migrations/migration`).map(file => {
-  let migrations = require(path.join(`${appRoot}/migrations/migration`, file))(Sequelize)
-  let funcArray = []
-  migrations.map(migration => {
+fs.readdirSync(`${appRoot}/migrations/migration`).map((file) => {
+  const migrations = require(path.join(`${appRoot}/migrations/migration`, file))(Sequelize)
+  const funcArray = []
+  migrations.map((migration) => {
     if (_.isPlainObject(migration) && migration.opt === 'drop') {
       return funcArray.push(async () => {
         const tables = await queryInterface.showAllTables()

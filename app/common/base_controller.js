@@ -1,11 +1,12 @@
-const convert = require('./transform').convert
-const Validator = require('jsonschema').Validator
+const { convert } = require('./transform')
+const { Validator } = require('jsonschema')
+
 const v = new Validator()
 
 class BaseController {
   async validate (model, params) {
     const jsonSchema = convert(model.requestBody.body)
-    const required = model.requestBody.required
+    const { required } = model.requestBody
     jsonSchema.required = required
     const result = await v.validate(params, jsonSchema)
     return new Promise((resolve, reject) => {
