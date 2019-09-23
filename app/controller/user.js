@@ -2,6 +2,7 @@ const BaseController = require('../common/base_controller')
 const schema = require('../swagger')
 
 class UserController extends BaseController {
+  // eslint-disable-next-line class-methods-use-this
   async index (req, res) {
     // const params = req.query
     res.json('hello')

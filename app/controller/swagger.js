@@ -1,6 +1,7 @@
 const swagger = require('../common/swagger')
 
 class SwaggerController {
+  // eslint-disable-next-line class-methods-use-this
   async doc (req, res) {
     const result = await swagger.generateSwagger({
       title: 'Demo API document',
@@ -19,6 +20,7 @@ class SwaggerController {
     res.json(result)
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async index (req, res) {
     await res.render('index.html', { url: 'swagger.json' })
   }

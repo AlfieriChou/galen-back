@@ -11,6 +11,7 @@ describe('GET /swagger.json!!!', () => {
       .set('Accept', 'application/json')
       .expect(200)
       .then((response) => {
+        // eslint-disable-next-line no-unused-expressions
         should(response.body).be.an.Object
       })
   })
@@ -23,6 +24,7 @@ describe('GET /apidoc!!!', () => {
       .set('Accept', 'text/html')
       .expect(200)
       .then((response) => {
+        // eslint-disable-next-line no-unused-expressions
         should(response.body).be.html
       })
   })
