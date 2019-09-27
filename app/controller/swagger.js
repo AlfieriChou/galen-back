@@ -3,7 +3,7 @@ const swagger = require('../common/swagger')
 class SwaggerController {
   // eslint-disable-next-line class-methods-use-this
   async doc (req, res) {
-    const result = await swagger.generateSwagger({
+    const result = swagger.generateSwagger({
       title: 'Demo API document',
       version: 'v3',
       description: 'Using swagger3.0 & sequelize to generate document',
