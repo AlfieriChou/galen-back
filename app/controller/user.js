@@ -1,4 +1,4 @@
-const BaseController = require('../common/base_controller')
+const BaseController = require('../common/baseController')
 const schema = require('../swagger')
 
 class UserController extends BaseController {
