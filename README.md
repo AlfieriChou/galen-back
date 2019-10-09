@@ -1,7 +1,7 @@
 [![standard][standard-image]][standard-url]
 
 [![Build Status][travis-image]][travis-url]
-[![Greenkeeper badge](https://badges.greenkeeper.io/AlfieriChou/sequelize_swagger2.0.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/AlfieriChou/sequelize-swagger2.0.svg)](https://greenkeeper.io/)
 [![codecov][codecov-image]][codecov-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
 [![license][license-image]][license-url]
@@ -141,12 +141,12 @@
   }
   ```
 
-[travis-image]: https://travis-ci.org/AlfieriChou/sequelize_swagger2.0.svg?branch=master
-[travis-url]: https://travis-ci.org/AlfieriChou/sequelize_swagger2.0
-[codecov-image]: https://codecov.io/gh/AlfieriChou/sequelize_swagger2.0/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/AlfieriChou/sequelize_swagger2.0
-[daviddm-image]: https://david-dm.org/AlfieriChou/sequelize_swagger2.0.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/AlfieriChou/sequelize_swagger2.0
+[travis-image]: https://travis-ci.org/AlfieriChou/sequelize-swagger2.0.svg?branch=master
+[travis-url]: https://travis-ci.org/AlfieriChou/sequelize-swagger2.0
+[codecov-image]: https://codecov.io/gh/AlfieriChou/sequelize-swagger2.0/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/AlfieriChou/sequelize-swagger2.0
+[daviddm-image]: https://david-dm.org/AlfieriChou/sequelize-swagger2.0.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/AlfieriChou/sequelize-swagger2.0
 [license-image]: https://img.shields.io/badge/License-MIT-yellow.svg
 [license-url]: https://opensource.org/licenses/MIT
 [standard-image]:
