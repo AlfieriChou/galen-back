@@ -45,13 +45,7 @@ module.exports = {
     method: 'get',
     tags: ['user'],
     summary: '获取用户详情',
-    params: _.pick(User.rawAttributes, ['id']),
-    output: {
-      200: {
-        type: 'object',
-        result: User.rawAttributes
-      }
-    }
+    params: _.pick(User.rawAttributes, ['id'])
   },
   update: {
     path: '/users/:id',

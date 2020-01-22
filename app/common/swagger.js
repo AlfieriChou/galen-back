@@ -26,7 +26,16 @@ const generateSwaggerDoc = (info, paths) => {
         const content = {
           tags: schemaValue.tags,
           summary: schemaValue.summary,
-          responses: {}
+          responses: {
+            200: {
+              description: 'response success',
+              content: {
+                'application/json': {
+                  schema: { $ref: `#/components/schemas/${schemaName}` }
+                }
+              }
+            }
+          }
         }
         if (schemaValue.query || schemaValue.params) {
           const params = schemaValue.query
@@ -95,17 +104,6 @@ const generateSwaggerDoc = (info, paths) => {
               }
             }
           })
-        } else {
-          content.responses = {
-            200: {
-              description: 'response success',
-              content: {
-                'application/json': {
-                  schema: { $ref: `#/components/schemas/${schemaName}` }
-                }
-              }
-            }
-          }
         }
         const swaggerItem = {}
         swaggerItem[schemaValue.path] = {}
