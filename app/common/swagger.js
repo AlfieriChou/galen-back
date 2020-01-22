@@ -7,18 +7,13 @@ const resTypeList = ['array', 'object', 'number']
 
 const generateSwaggerDoc = (info, paths) => {
   const items = dir(paths).filter(n => !n.endsWith('index.js'))
-  const methods = []
   const components = {
     schemas: {}
   }
-  items.forEach((item) => {
-    /* eslint-disable import/no-dynamic-require */
-    /* eslint-disable global-require */
+  const methods = items.reduce((methodRet, item) => {
+    // eslint-disable-next-line import/no-dynamic-require, global-require
     const model = require(item)
-    /* eslint-enable global-require */
-    /* eslint-enable import/no-dynamic-require */
-    const fileName = path.basename(item).replace(/\.\w+$/, '')
-    const schemaName = _.upperFirst(fileName)
+    const schemaName = _.upperFirst(path.basename(item).replace(/\.\w+$/, ''))
     Object.entries(model).forEach(([schemaKey, schemaValue]) => {
       if (schemaKey === schemaName) {
         components.schemas[schemaName] = jsonSchema.transform(schemaValue)
@@ -70,21 +65,19 @@ const generateSwaggerDoc = (info, paths) => {
           }
         }
         if (schemaValue.output) {
-          const response = schemaValue.output
-          Object.keys(response).forEach((key) => {
+          Object.entries(schemaValue.output).forEach(([key, responseValue]) => {
             let outputSchema
-            const output = response[key]
-            if (!resTypeList.includes(output.type)) throw new Error('output type mast ba array or object or number!')
+            if (!resTypeList.includes(responseValue.type)) throw new Error('output type mast ba array or object or number!')
             // eslint-disable-next-line default-case
-            switch (output.type) {
+            switch (responseValue.type) {
               case 'array':
                 outputSchema = {
                   type: 'array',
-                  items: output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
+                  items: responseValue.result ? jsonSchema.convert(responseValue.result) : { type: 'object', properties: {} }
                 }
                 break
               case 'object':
-                outputSchema = output.result ? jsonSchema.convert(output.result) : { type: 'object', properties: {} }
+                outputSchema = responseValue.result ? jsonSchema.convert(responseValue.result) : { type: 'object', properties: {} }
                 break
               case 'number':
                 outputSchema = {
@@ -108,10 +101,11 @@ const generateSwaggerDoc = (info, paths) => {
         const swaggerItem = {}
         swaggerItem[schemaValue.path] = {}
         swaggerItem[schemaValue.path][schemaValue.method] = content
-        methods.push(swaggerItem)
+        methodRet.push(swaggerItem)
       }
     })
-  })
+    return methodRet
+  }, [])
   return {
     openapi: '3.0.0',
     info,
