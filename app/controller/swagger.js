@@ -1,9 +1,10 @@
-const swagger = require('../common/swagger')
+const path = require('path')
+const generateSwaggerDoc = require('../common/swagger')
 
 class SwaggerController {
   // eslint-disable-next-line class-methods-use-this
   async doc (req, res) {
-    const result = swagger.generateSwagger({
+    const result = generateSwaggerDoc({
       title: 'Demo API document',
       version: 'v3',
       description: 'Using swagger3.0 & sequelize to generate document',
@@ -16,7 +17,7 @@ class SwaggerController {
         name: 'MIT',
         url: 'https://github.com/AlfieriChou/joi_swagger_three/blob/master/LICENSE'
       }
-    })
+    }, path.resolve(__dirname, '../swagger'))
     res.json(result)
   }
 
