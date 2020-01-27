@@ -5,24 +5,84 @@ const jsonSchema = require('./transform')
 
 const resTypeList = ['array', 'object', 'number']
 
-const generateSwaggerDoc = (info, paths) => {
+const generateSwaggerDoc = async (info, paths) => {
   const items = dir(paths).filter(n => !n.endsWith('index.js'))
   const components = {
     schemas: {}
   }
-  const methods = items.reduce((methodRet, item) => {
+  const methods = await items.reduce(async (methodRetPromise, item) => {
+    const methodRet = await methodRetPromise
     // eslint-disable-next-line import/no-dynamic-require, global-require
     const model = require(item)
     const schemaName = _.upperFirst(path.basename(item).replace(/\.\w+$/, ''))
-    Object.entries(model).forEach(([schemaKey, schemaValue]) => {
+    await Object.entries(model).reduce(async (promise, [schemaKey, schemaValue]) => {
+      await promise
       if (schemaKey === schemaName) {
         components.schemas[schemaName] = jsonSchema.transform(schemaValue)
-      } else {
-        const content = {
-          tags: schemaValue.tags,
-          summary: schemaValue.summary,
-          responses: {
-            200: {
+        return
+      }
+      const content = {
+        tags: schemaValue.tags || '',
+        summary: schemaValue.summary || '',
+        responses: {
+          200: {
+            description: 'response success',
+            content: {
+              'application/json': {
+                schema: { $ref: `#/components/schemas/${schemaName}` }
+              }
+            }
+          }
+        }
+      }
+      if (schemaValue.query || schemaValue.params) {
+        const params = schemaValue.query
+          ? jsonSchema.convert(schemaValue.query) : jsonSchema.convert(schemaValue.params)
+        content.parameters = Object.entries(params.properties)
+          .reduce((ret, [propKey, propValue]) => {
+            ret.push({
+              name: propKey,
+              in: schemaValue.query ? 'query' : 'path',
+              description: propValue.description,
+              schema: {
+                type: propValue.type
+              },
+              required: !schemaValue.query
+            })
+            return ret
+          }, [])
+      }
+      if (schemaValue.requestBody) {
+        const params = jsonSchema.convert(schemaValue.requestBody.body)
+        content.requestBody = {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: params.type,
+                properties: params.properties,
+                required: schemaValue.requestBody.required
+              }
+            }
+          }
+        }
+      }
+      if (schemaValue.output) {
+        content.responses = await Object.entries(schemaValue.output)
+          .reduce(async (resPromise, [responseKey, responseValue]) => {
+            const outputDatas = await resPromise
+            if (responseKey === '304') {
+              if (responseValue.type === 'html') {
+                outputDatas[responseKey] = {
+                  description: 'response success',
+                  content: {
+                    'text/html': {}
+                  }
+                }
+              }
+              return outputDatas
+            }
+            outputDatas[200] = {
               description: 'response success',
               content: {
                 'application/json': {
@@ -30,65 +90,21 @@ const generateSwaggerDoc = (info, paths) => {
                 }
               }
             }
-          }
-        }
-        if (schemaValue.query || schemaValue.params) {
-          const params = schemaValue.query
-            ? jsonSchema.convert(schemaValue.query) : jsonSchema.convert(schemaValue.params)
-          content.parameters = Object.entries(params.properties)
-            .reduce((ret, [prop, propValue]) => {
-              ret.push({
-                name: prop,
-                in: schemaValue.query ? 'query' : 'path',
-                description: propValue.description,
-                schema: {
-                  type: propValue.type
-                },
-                required: !schemaValue.query
-              })
-              return ret
-            }, [])
-        }
-        if (schemaValue.requestBody) {
-          const params = jsonSchema.convert(schemaValue.requestBody.body)
-          content.requestBody = {
-            required: true,
-            content: {
-              'application/json': {
-                schema: {
-                  type: params.type,
-                  properties: params.properties,
-                  required: schemaValue.requestBody.required
-                }
-              }
-            }
-          }
-        }
-        if (schemaValue.output) {
-          Object.entries(schemaValue.output).forEach(([key, responseValue]) => {
             let outputSchema
             if (!resTypeList.includes(responseValue.type)) throw new Error('output type mast ba array or object or number!')
-            // eslint-disable-next-line default-case
-            switch (responseValue.type) {
-              case 'array':
-                outputSchema = {
-                  type: 'array',
-                  items: responseValue.result ? jsonSchema.convert(responseValue.result) : { type: 'object', properties: {} }
-                }
-                break
-              case 'object':
-                outputSchema = responseValue.result ? jsonSchema.convert(responseValue.result) : { type: 'object', properties: {} }
-                break
-              case 'number':
-                outputSchema = {
-                  type: 'object',
-                  properties: {
-                    result: { type: 'number', description: '返回标识' }
-                  }
-                }
-                break
+            if (responseValue.type === 'array') {
+              outputSchema = {
+                type: 'array',
+                items: responseValue.result ? jsonSchema.convert(responseValue.result) : { type: 'object', properties: {} }
+              }
             }
-            content.responses[key] = {
+            if (responseValue.type === 'object') {
+              outputSchema = responseValue.result ? jsonSchema.convert(responseValue.result) : { type: 'object', properties: {} }
+            }
+            if (responseValue.type === 'number') {
+              outputSchema = { type: 'object', properties: { result: { type: 'number', description: '返回标识' } } }
+            }
+            outputDatas[responseKey] = {
               description: 'response success',
               content: {
                 'application/json': {
@@ -96,16 +112,16 @@ const generateSwaggerDoc = (info, paths) => {
                 }
               }
             }
-          })
-        }
-        const swaggerItem = {}
-        swaggerItem[schemaValue.path] = {}
-        swaggerItem[schemaValue.path][schemaValue.method] = content
-        methodRet.push(swaggerItem)
+            return outputDatas
+          }, Promise.resolve({}))
       }
-    })
+      const swaggerItem = {}
+      swaggerItem[schemaValue.path] = {}
+      swaggerItem[schemaValue.path][schemaValue.method] = content
+      methodRet.push(swaggerItem)
+    }, Promise.resolve())
     return methodRet
-  }, [])
+  }, Promise.resolve([]))
   return {
     openapi: '3.0.0',
     info,

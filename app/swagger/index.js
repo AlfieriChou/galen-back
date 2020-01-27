@@ -1,15 +1,10 @@
-const appRoot = require('app-root-path')
 const dir = require('dir_filenames')
-const _ = require('lodash')
+const path = require('path')
 
-const files = dir(`${appRoot}/app/swagger`)
-_.remove(files, n => n === `${appRoot}/app/swagger/index.js`)
-
-/* eslint-disable import/no-dynamic-require */
-/* eslint-disable global-require */
-files.forEach((item) => {
-  const name = item.split('/').pop().replace(/\.\w+$/, '')
-  exports[name] = require(item)
-})
-/* eslint-enable global-require */
-/* eslint-enable import/no-dynamic-require */
+module.exports = dir(path.resolve(__dirname, './'))
+  .filter(n => !n.endsWith('index.js'))
+  .reduce((acc, item) => {
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    acc[path.basename(item).replace(/\.\w+$/, '')] = require(item)
+    return acc
+  }, {})
