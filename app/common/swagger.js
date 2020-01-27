@@ -23,17 +23,7 @@ const generateSwaggerDoc = async (info, paths) => {
       }
       const content = {
         tags: schemaValue.tags || '',
-        summary: schemaValue.summary || '',
-        responses: {
-          200: {
-            description: 'response success',
-            content: {
-              'application/json': {
-                schema: { $ref: `#/components/schemas/${schemaName}` }
-              }
-            }
-          }
-        }
+        summary: schemaValue.summary || ''
       }
       if (schemaValue.query || schemaValue.params) {
         const params = schemaValue.query
@@ -71,13 +61,11 @@ const generateSwaggerDoc = async (info, paths) => {
         content.responses = await Object.entries(schemaValue.output)
           .reduce(async (resPromise, [responseKey, responseValue]) => {
             const outputDatas = await resPromise
-            if (responseKey === '304') {
-              if (responseValue.type === 'html') {
-                outputDatas[responseKey] = {
-                  description: 'response success',
-                  content: {
-                    'text/html': {}
-                  }
+            if (responseValue.type === 'html') {
+              outputDatas[responseKey] = {
+                description: 'response success',
+                content: {
+                  'text/html': {}
                 }
               }
               return outputDatas

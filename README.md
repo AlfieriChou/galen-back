@@ -1,9 +1,7 @@
 [![standard][standard-image]][standard-url]
 
-[![Build Status][travis-image]][travis-url]
+[![Build Status](https://github.com/AlfieriChou/sequelize-swagger2.0/workflows/Node%20CI/badge.svg?branch=master&event=push)](https://github.com/AlfieriChou/sequelize-swagger2.0/actions)
 [![Greenkeeper badge](https://badges.greenkeeper.io/AlfieriChou/sequelize-swagger2.0.svg)](https://greenkeeper.io/)
-[![codecov][codecov-image]][codecov-url]
-[![Dependency Status][daviddm-image]][daviddm-url]
 [![license][license-image]][license-url]
 
 # How to write swagger document in Sequelize
@@ -141,12 +139,16 @@
   }
   ```
 
-[travis-image]: https://travis-ci.org/AlfieriChou/sequelize-swagger2.0.svg?branch=master
-[travis-url]: https://travis-ci.org/AlfieriChou/sequelize-swagger2.0
-[codecov-image]: https://codecov.io/gh/AlfieriChou/sequelize-swagger2.0/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/AlfieriChou/sequelize-swagger2.0
-[daviddm-image]: https://david-dm.org/AlfieriChou/sequelize-swagger2.0.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/AlfieriChou/sequelize-swagger2.0
+  * html
+
+  ```javascript
+  output: {
+    304: {
+      type: 'html'
+    }
+  }
+  ```
+
 [license-image]: https://img.shields.io/badge/License-MIT-yellow.svg
 [license-url]: https://opensource.org/licenses/MIT
 [standard-image]:
