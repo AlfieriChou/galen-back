@@ -3,7 +3,7 @@ const dir = require('dir_filenames')
 const path = require('path')
 const jsonSchema = require('./transform')
 
-const resTypeList = ['array', 'object', 'number']
+const resTypeList = ['array', 'object', 'number', 'string', 'html']
 
 const generateSwaggerDoc = async (info, paths) => {
   const items = dir(paths).filter(n => !n.endsWith('index.js'))
@@ -61,6 +61,7 @@ const generateSwaggerDoc = async (info, paths) => {
         content.responses = await Object.entries(schemaValue.output)
           .reduce(async (resPromise, [responseKey, responseValue]) => {
             const outputDatas = await resPromise
+            if (!resTypeList.includes(responseValue.type)) throw new Error('output type mast ba array or object or number or string or html!')
             if (responseValue.type === 'html') {
               outputDatas[responseKey] = {
                 description: 'response success',
@@ -79,7 +80,6 @@ const generateSwaggerDoc = async (info, paths) => {
               }
             }
             let outputSchema
-            if (!resTypeList.includes(responseValue.type)) throw new Error('output type mast ba array or object or number!')
             if (responseValue.type === 'array') {
               outputSchema = {
                 type: 'array',
@@ -91,6 +91,9 @@ const generateSwaggerDoc = async (info, paths) => {
             }
             if (responseValue.type === 'number') {
               outputSchema = { type: 'object', properties: { result: { type: 'number', description: '返回标识' } } }
+            }
+            if (responseValue.type === 'string') {
+              outputSchema = { type: 'object', properties: { result: { type: 'string', description: '返回标识' } } }
             }
             outputDatas[responseKey] = {
               description: 'response success',
