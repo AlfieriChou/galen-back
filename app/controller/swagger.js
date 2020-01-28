@@ -17,7 +17,7 @@ class SwaggerController {
         name: 'MIT',
         url: 'https://github.com/AlfieriChou/joi_swagger_three/blob/master/LICENSE'
       }
-    }, path.resolve(__dirname, '../swagger'))
+    }, path.resolve(__dirname, '../routes'))
     res.json(result)
   }
 

@@ -1,5 +1,5 @@
 const BaseController = require('../common/baseController')
-const schema = require('../swagger')
+const schema = require('../routes')
 
 class UserController extends BaseController {
   // eslint-disable-next-line class-methods-use-this
@@ -16,6 +16,16 @@ class UserController extends BaseController {
     } catch (err) {
       res.status(422).send(err)
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async show (req, res) {
+    res.json('hello')
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async update (req, res) {
+    res.json('hello')
   }
 }
 

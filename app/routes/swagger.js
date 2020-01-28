@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 
 module.exports = {
-  apidoc: {
+  index: {
     path: '/apidoc',
     method: 'get',
     tags: ['swagger'],
@@ -12,7 +12,7 @@ module.exports = {
       }
     }
   },
-  swagger: {
+  doc: {
     path: '/swagger.json',
     method: 'get',
     tags: ['swagger'],

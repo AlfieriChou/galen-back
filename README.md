@@ -70,7 +70,7 @@
   }
   ```
 
-### swagger
+### routes
 
 * path
   * Define the interface baseUrl.
