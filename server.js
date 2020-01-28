@@ -1,7 +1,7 @@
 const express = require('express')
 const BodyParser = require('body-parser')
 const morgan = require('morgan')
-const engines = require('consolidate')
+const nunjucks = require('nunjucks')
 const path = require('path')
 const config = require('./config')
 const common = require('./app')
@@ -11,10 +11,13 @@ const app = express()
 app.use(BodyParser.urlencoded({ extended: true }))
 app.use(BodyParser.json())
 
-app.get('env') === 'production' ? app.use(morgan('combined')) : app.use(morgan('dev'))
+app.use(morgan(app.get('env') === 'production' ? 'combined' : 'dev'))
+nunjucks.configure(path.resolve(__dirname, './views'), {
+  autoescape: true,
+  express: app,
+  watch: true
+})
 app.use(express.static(path.resolve('./public')))
-app.engine('html', engines.mustache)
-app.set('view engine', 'html')
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const appRoot = require('app-root-path')
+const path = require('path')
 const walkSync = require('walk-sync')
 const config = require('../../config')
 
@@ -15,12 +15,12 @@ const sequelize = new Sequelize(config.mysql.database, config.mysql.user, config
 })
 
 const db = {}
-const paths = walkSync(`${appRoot}/app/model`, {
+const paths = walkSync(path.resolve(__dirname, './'), {
   globs: ['**/*.js'],
   ignore: ['index.js']
 })
 paths.forEach((file) => {
-  const model = sequelize.import(`${appRoot}/app/model/${file}`)
+  const model = sequelize.import(path.resolve(__dirname, `./${file}`))
   db[model.name] = model
 })
 Object.keys(db).forEach((modelName) => {
