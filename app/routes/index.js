@@ -5,6 +5,24 @@ const controller = require('../controller')
 
 const api = express.Router()
 
+const intersection = (a, b) => {
+  const s = new Set(b)
+  return a.filter(x => s.has(x))
+}
+
+const checkRoles = async apiInfo => async (req, res, next) => {
+  if (!apiInfo.roles) {
+    return next()
+  }
+  const intersectionRoles = intersection(apiInfo.roles, req.roles = [])
+  if (intersectionRoles.length === 0) {
+    return res.status(403).send({
+      message: 'permission denied'
+    })
+  }
+  return next()
+}
+
 dir(path.resolve(__dirname, './'))
   .filter(n => !n.endsWith('index.js'))
   .forEach(async (filename) => {
@@ -16,7 +34,7 @@ dir(path.resolve(__dirname, './'))
         if (/^[A-Z]/.test(handler)) {
           return
         }
-        api[apiInfo.method](apiInfo.path, controller[modelName][handler])
+        api[apiInfo.method](apiInfo.path, await checkRoles(apiInfo), controller[modelName][handler])
       }, Promise.resolve())
   })
 
