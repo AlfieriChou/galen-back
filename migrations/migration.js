@@ -4,58 +4,82 @@ const _ = require('lodash')
 const Sequelize = require('sequelize')
 const queryInterface = require('./index')
 
-let tasks = []
-fs.readdirSync(path.resolve(__dirname, './migration')).forEach((file) => {
+const tasks = fs.readdirSync(
+  path.resolve(__dirname, './migration')
+).reduce((ret, file) => {
   // eslint-disable-next-line global-require, import/no-dynamic-require
-  const migrations = require(path.resolve(`./migration/${file}`))(Sequelize)
-  const funcArray = []
-  migrations.forEach((migration) => {
+  const migrations = require(path.resolve(__dirname, `./migration/${file}`))(Sequelize)
+  const funcArr = migrations.reduce((funcArray, migration) => {
     if (_.isPlainObject(migration) && migration.opt === 'create') {
       funcArray.push(async () => {
         const tables = await queryInterface.showAllTables()
-        if (tables.indexOf(migration.table) < 0) {
-          queryInterface.createTable(migration.table, migration.column, { charset: 'utf8' })
+        if (!tables.includes(_.snakeCase(migration.table))) {
+          queryInterface.createTable(
+            _.snakeCase(migration.table),
+            Object.entries(migration.column).reduce((acc, [key, value]) => {
+              acc[_.snakeCase(key)] = value
+              return acc
+            }, {}),
+            { charset: 'utf8' }
+          )
         }
       })
     }
     if (_.isPlainObject(migration) && migration.opt === 'addColumn') {
       funcArray.push(async () => {
-        const describe = await queryInterface.describeTable(migration.table)
-        if (!describe[migration.field]) {
-          queryInterface.addColumn(migration.table, migration.field, Object.assign(
-            migration.type,
-            { after: migration.after }
-          ))
+        const describe = await queryInterface.describeTable(
+          _.snakeCase(migration.table)
+        )
+        if (!describe[_.snakeCase(migration.field)]) {
+          queryInterface.addColumn(
+            _.snakeCase(migration.table),
+            _.snakeCase(migration.field),
+            Object.assign(
+              migration.type,
+              { after: _.snakeCase(migration.after) }
+            )
+          )
         }
       })
     }
     if (_.isPlainObject(migration) && migration.opt === 'changeColumn') {
       funcArray.push(async () => {
-        const describe = await queryInterface.describeTable(migration.table)
-        if (describe[migration.field]) {
-          queryInterface.changeColumn(migration.table, migration.field, migration.type)
+        const describe = await queryInterface.describeTable(_.snakeCase(migration.table))
+        if (describe[_.snakeCase(migration.field)]) {
+          queryInterface.changeColumn(
+            _.snakeCase(migration.table),
+            _.snakeCase(migration.field),
+            migration.type
+          )
         }
       })
     }
     if (_.isPlainObject(migration) && migration.opt === 'renameColumn') {
       funcArray.push(async () => {
-        const describe = await queryInterface.describeTable(migration.table)
-        if (describe[migration.before]) {
-          queryInterface.renameColumn(migration.table, migration.before, migration.after)
+        const describe = await queryInterface.describeTable(_.snakeCase(migration.table))
+        if (describe[_.snakeCase(migration.before)]) {
+          queryInterface.renameColumn(
+            _.snakeCase(migration.table),
+            _.snakeCase(migration.before),
+            _.snakeCase(migration.after)
+          )
         }
       })
     }
     if (_.isPlainObject(migration) && migration.opt === 'removeColumn') {
       funcArray.push(async () => {
-        const describe = await queryInterface.describeTable(migration.table)
-        if (describe[migration.field]) {
-          queryInterface.removeColumn(migration.table, migration.field)
+        const describe = await queryInterface.describeTable(_.snakeCase(migration.table))
+        if (describe[_.snakeCase(migration.field)]) {
+          queryInterface.removeColumn(
+            _.snakeCase(migration.table),
+            _.snakeCase(migration.field)
+          )
         }
       })
     }
     if (_.isPlainObject(migration) && migration.opt === 'addIndex') {
       funcArray.push(async () => queryInterface.addIndex(
-        migration.table,
+        _.snakeCase(migration.table),
         migration.attributes,
         migration.options
       ))
@@ -63,21 +87,35 @@ fs.readdirSync(path.resolve(__dirname, './migration')).forEach((file) => {
     if (_.isPlainObject(migration) && migration.opt === 'removeIndex') {
       funcArray.push(async () => {
         if (migration.attributes.length === 1) {
-          queryInterface.removeIndex(migration.table, migration.attributes[0])
+          queryInterface.removeIndex(
+            _.snakeCase(migration.table),
+            migration.attributes[0]
+          )
         }
-        queryInterface.removeColumn(migration.table, migration.attributes)
+        queryInterface.removeColumn(
+          _.snakeCase(migration.table),
+          migration.attributes
+        )
       })
     }
     if (_.isPlainObject(migration) && migration.opt === 'query') {
       funcArray.push(async () => queryInterface.sequelize.query(migration.sql))
     }
-  })
-  tasks = _.union(tasks, funcArray)
+    return funcArray
+  }, [])
+  return [
+    ...ret,
+    ...funcArr
+  ]
+}, [])
+
+Promise.resolve(
+  tasks
+    .reduce(async (promise, task) => {
+      await promise
+      await task()
+    }, Promise.resolve())
+).then(() => {
+  console.log('sync done!')
+  process.exit()
 })
-Promise
-  .reduce(tasks, (total, task) => Promise.resolve().then(task), 0)
-  .then(() => {
-    // eslint-disable-next-line no-console
-    console.log('sync db done!')
-    process.exit()
-  })
