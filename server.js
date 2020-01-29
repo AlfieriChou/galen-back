@@ -5,6 +5,8 @@ const nunjucks = require('nunjucks')
 const path = require('path')
 const config = require('./config')
 const common = require('./app')
+const jwtVerifyMiddleware = require('./middleware/jwtVerify')
+const authMiddleware = require('./middleware/auth')
 
 const app = express()
 
@@ -25,6 +27,9 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   next()
 })
+
+app.use(jwtVerifyMiddleware)
+app.use(authMiddleware)
 
 app.use('/v1/', common.router)
 
