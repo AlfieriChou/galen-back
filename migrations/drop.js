@@ -33,6 +33,7 @@ Promise.resolve(
       await task()
     }, Promise.resolve())
 ).then(() => {
+  // eslint-disable-next-line no-console
   console.log('sync done!')
   process.exit()
 })

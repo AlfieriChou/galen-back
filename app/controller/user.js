@@ -1,5 +1,4 @@
 const BaseController = require('../common/baseController')
-const schema = require('../routes')
 
 class UserController extends BaseController {
   // eslint-disable-next-line class-methods-use-this
@@ -8,14 +7,10 @@ class UserController extends BaseController {
     res.json('hello')
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async create (req, res) {
     const params = req.body
-    try {
-      await super.validate(schema.user.create, params)
-      res.json(params)
-    } catch (err) {
-      res.status(422).send(err)
-    }
+    res.json(params)
   }
 
   // eslint-disable-next-line class-methods-use-this
