@@ -136,61 +136,62 @@ const property = (attribute, options) => {
       description: comment
     }
   }
+  // TODO: refactor JSON type
+  if (attribute.type.key === 'JSON') {
+    return { type: 'object', properties: { } }
+  }
+  // TODO: refactor ARRAY type
+  if (attribute.type.key === 'ARRAY') {
+    return { type: 'array', items: [] }
+  }
   return { type: (attribute.type.key).toLowerCase(), description: comment }
 }
 
-class JsonSchema {
-  // TODO: refactor
-  // eslint-disable-next-line class-methods-use-this
+module.exports = {
   transform (model, option) {
     const options = option || {}
-    const schema = {
-      type: 'object',
-      properties: {}
-    }
     const exclude = options.exclude || options.private || []
     const attributes = options.attributes || Object.keys(model.rawAttributes)
-    attributes.forEach((attributeName) => {
-      if (exclude.includes(attributeName)) {
-        return
-      }
-      const attribute = model.rawAttributes[attributeName]
-      if (attribute) {
-        schema.properties[attributeName] = property(attribute, options)
-        const field = schema.properties[attributeName]
-        const { associations } = model
-        if (model.associations && !field.description) {
-          Object.entries(associations).forEach(([linkField, association]) => {
-            if (attributeName === association.options.foreignKey) {
-              field.description = association.options.comment
-            }
-          })
+    return {
+      type: 'object',
+      properties: attributes.reduce((ret, attribute) => {
+        if (exclude.includes(attribute)) {
+          return ret
         }
-      }
-    })
-    return schema
-  }
+        const attributeValue = model.rawAttributes[attribute]
+        if (attributeValue) {
+          const field = property(attributeValue, options)
+          if (model.associations && !field.description) {
+            const { associations } = model
+            Object.entries(associations).forEach(([, association]) => {
+              if (attribute === association.options.foreignKey) {
+                field.description = association.options.comment
+              }
+            })
+          }
+          // eslint-disable-next-line no-param-reassign
+          ret[attribute] = field
+        }
+        return ret
+      }, {})
+    }
+  },
 
-  // eslint-disable-next-line class-methods-use-this
   convert (model, option) {
     const options = option || {}
     const exclude = options.exclude || options.private || []
-    const attributes = Object.keys(model)
     return {
       type: 'object',
-      properties: attributes.reduce((ret, attributeName) => {
-        if (exclude.includes(attributeName)) {
+      properties: Object.entries(model).reduce((ret, [key, value]) => {
+        if (exclude.includes(key)) {
           return ret
         }
-        const attribute = model[attributeName]
-        if (attribute) {
+        if (value) {
           // eslint-disable-next-line no-param-reassign
-          ret[attributeName] = property(attribute, options)
+          ret[key] = property(value, options)
         }
         return ret
       }, {})
     }
   }
 }
-
-module.exports = new JsonSchema()
