@@ -4,6 +4,9 @@ module.exports = function (sequelize, DataTypes) {
     phone: { type: DataTypes.STRING, comment: '手机号' },
     password: { type: DataTypes.STRING, comment: '密码' },
     nickname: { type: DataTypes.STRING, comment: '昵称' }
+  }, {
+    underscored: true,
+    tableName: 'user'
   })
 
   return User

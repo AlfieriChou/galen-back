@@ -3,7 +3,7 @@ module.exports = Sequelize => [
     opt: 'create',
     table: 'good',
     column: {
-      id: { type: Sequelize.UUID, primaryKey: true, defaultValue: Sequelize.UUIDV1 },
+      id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
       name: { type: Sequelize.STRING, comment: '名称' },
       description: { type: Sequelize.TEXT, comment: '描述' },
       createdAt: { type: Sequelize.DATE, allowNull: false },

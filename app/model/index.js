@@ -14,15 +14,16 @@ const sequelize = new Sequelize(config.mysql.database, config.mysql.user, config
   logging: false
 })
 
-const db = {}
 const paths = walkSync(path.resolve(__dirname, './'), {
   globs: ['**/*.js'],
   ignore: ['index.js']
 })
-paths.forEach((file) => {
+const db = paths.reduce((ret, file) => {
   const model = sequelize.import(path.resolve(__dirname, `./${file}`))
-  db[model.name] = model
-})
+  // eslint-disable-next-line no-param-reassign
+  ret[model.name] = model
+  return ret
+}, {})
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db)

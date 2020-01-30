@@ -67,5 +67,37 @@ module.exports = {
         type: 'number'
       }
     }
+  },
+  register: {
+    path: '/register',
+    method: 'post',
+    tags: ['user'],
+    summary: '用户注册',
+    requestBody: {
+      body: _.pick(User.rawAttributes, ['phone', 'password']),
+      required: ['phone', 'password']
+    },
+    output: {
+      200: {
+        type: 'object',
+        result: User.rawAttributes
+      }
+    }
+  },
+  login: {
+    path: '/login',
+    method: 'post',
+    tags: ['user'],
+    summary: '用户登录',
+    requestBody: {
+      body: _.pick(User.rawAttributes, ['phone', 'password']),
+      required: ['phone', 'password']
+    },
+    output: {
+      200: {
+        type: 'object',
+        result: User.rawAttributes
+      }
+    }
   }
 }
