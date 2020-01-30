@@ -105,10 +105,6 @@ const property = (attribute, options) => {
     schema.description = comment
     return schema
   }
-  if (type instanceof Sequelize.JSON ||
-    type instanceof Sequelize.JSONB) {
-    return attribute.keys ? this.convert(attribute.keys) : { type: 'object', properties: {} }
-  }
   if (type instanceof Sequelize.VIRTUAL) {
     // eslint-disable-next-line no-nested-ternary
     return type.returnType ? property({
@@ -123,75 +119,73 @@ const property = (attribute, options) => {
       description: comment
     }
   }
-  if (type instanceof Sequelize.ARRAY) {
+  if (attribute.type.key === 'JSON') {
+    return attribute.keys ? convert(attribute.keys) : { type: 'object', properties: {} }
+  }
+  if (attribute.type.key === 'ARRAY') {
     // eslint-disable-next-line no-nested-ternary
     return type.type ? {
       type: 'array',
       items: property({ type: type.type })
     } : attribute.items ? {
       type: 'array',
-      items: this.convert(attribute.items)
+      items: convert(attribute.items)
     } : {
       type: 'array',
       description: comment
     }
   }
-  // TODO: refactor JSON type
-  if (attribute.type.key === 'JSON') {
-    return { type: 'object', properties: { } }
-  }
-  // TODO: refactor ARRAY type
-  if (attribute.type.key === 'ARRAY') {
-    return { type: 'array', items: [] }
-  }
   return { type: (attribute.type.key).toLowerCase(), description: comment }
 }
 
-module.exports = {
-  transform (model, option) {
-    const options = option || {}
-    const exclude = options.exclude || options.private || []
-    const attributes = options.attributes || Object.keys(model.rawAttributes)
-    return {
-      type: 'object',
-      properties: attributes.reduce((ret, attribute) => {
-        if (exclude.includes(attribute)) {
-          return ret
-        }
-        const attributeValue = model.rawAttributes[attribute]
-        if (attributeValue) {
-          const field = property(attributeValue, options)
-          if (model.associations && !field.description) {
-            const { associations } = model
-            Object.entries(associations).forEach(([, association]) => {
-              if (attribute === association.options.foreignKey) {
-                field.description = association.options.comment
-              }
-            })
-          }
-          // eslint-disable-next-line no-param-reassign
-          ret[attribute] = field
-        }
+const transform = (model, option) => {
+  const options = option || {}
+  const exclude = options.exclude || options.private || []
+  const attributes = options.attributes || Object.keys(model.rawAttributes)
+  return {
+    type: 'object',
+    properties: attributes.reduce((ret, attribute) => {
+      if (exclude.includes(attribute)) {
         return ret
-      }, {})
-    }
-  },
-
-  convert (model, option) {
-    const options = option || {}
-    const exclude = options.exclude || options.private || []
-    return {
-      type: 'object',
-      properties: Object.entries(model).reduce((ret, [key, value]) => {
-        if (exclude.includes(key)) {
-          return ret
+      }
+      const attributeValue = model.rawAttributes[attribute]
+      if (attributeValue) {
+        const field = property(attributeValue, options)
+        if (model.associations && !field.description) {
+          const { associations } = model
+          Object.entries(associations).forEach(([, association]) => {
+            if (attribute === association.options.foreignKey) {
+              field.description = association.options.comment
+            }
+          })
         }
-        if (value) {
-          // eslint-disable-next-line no-param-reassign
-          ret[key] = property(value, options)
-        }
-        return ret
-      }, {})
-    }
+        // eslint-disable-next-line no-param-reassign
+        ret[attribute] = field
+      }
+      return ret
+    }, {})
   }
+}
+
+const convert = (model, option) => {
+  const options = option || {}
+  const exclude = options.exclude || options.private || []
+  return {
+    type: 'object',
+    properties: Object.entries(model).reduce((ret, [key, value]) => {
+      if (exclude.includes(key)) {
+        return ret
+      }
+      if (value) {
+        // eslint-disable-next-line no-param-reassign
+        ret[key] = property(value, options)
+      }
+      return ret
+    }, {})
+  }
+}
+
+module.exports = {
+  transform,
+  convert
 }

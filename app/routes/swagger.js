@@ -22,7 +22,28 @@ module.exports = {
         type: 'object',
         result: {
           openapi: { type: Sequelize.STRING },
-          info: { type: Sequelize.JSON },
+          info: {
+            type: Sequelize.JSON,
+            keys: {
+              title: { type: Sequelize.STRING },
+              version: { type: Sequelize.STRING },
+              contact: {
+                type: Sequelize.JSON,
+                keys: {
+                  name: { type: Sequelize.STRING },
+                  email: { type: Sequelize.STRING },
+                  url: { type: Sequelize.STRING }
+                }
+              },
+              license: {
+                type: Sequelize.JSON,
+                keys: {
+                  name: { type: Sequelize.STRING },
+                  url: { type: Sequelize.STRING }
+                }
+              }
+            }
+          },
           paths: { type: Sequelize.JSON },
           components: { type: Sequelize.JSON }
         }
