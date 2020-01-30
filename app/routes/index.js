@@ -1,9 +1,12 @@
 const dir = require('dir_filenames')
 const path = require('path')
 const express = require('express')
+const { Validator } = require('jsonschema')
+const { convert } = require('../common/transform')
 const controller = require('../controller')
 
 const api = express.Router()
+const v = new Validator()
 
 const intersection = (a, b) => {
   const s = new Set(b)
@@ -17,7 +20,25 @@ const checkRoles = async apiInfo => async (req, res, next) => {
   const intersectionRoles = intersection(apiInfo.roles, req.roles = [])
   if (intersectionRoles.length === 0) {
     return res.status(403).send({
+      status: 403,
       message: 'permission denied'
+    })
+  }
+  return next()
+}
+
+const validate = async apiInfo => async (req, res, next) => {
+  if (!apiInfo.requestBody) {
+    return next()
+  }
+  const { body, required = [] } = apiInfo.requestBody
+  const jsonSchema = convert(body)
+  jsonSchema.required = required
+  const validateRet = await v.validate(req.body, jsonSchema)
+  if (validateRet.errors.length > 0) {
+    return res.status(400).send({
+      status: 400,
+      message: validateRet.errors[0].message
     })
   }
   return next()
@@ -34,7 +55,12 @@ dir(path.resolve(__dirname, './'))
         if (/^[A-Z]/.test(handler)) {
           return
         }
-        api[apiInfo.method](apiInfo.path, await checkRoles(apiInfo), controller[modelName][handler])
+        api[apiInfo.method](
+          apiInfo.path,
+          await checkRoles(apiInfo),
+          await validate(apiInfo),
+          controller[modelName][handler]
+        )
       }, Promise.resolve())
   })
 
