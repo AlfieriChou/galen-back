@@ -4,6 +4,7 @@ const express = require('express')
 const { Validator } = require('jsonschema')
 const { convert } = require('../common/transform')
 const controller = require('../controller')
+const generateSwaggerDoc = require('../common/swagger')
 
 const api = express.Router()
 const v = new Validator()
@@ -55,11 +56,51 @@ dir(path.resolve(__dirname, './'))
         if (/^[A-Z]/.test(handler)) {
           return
         }
+        if (modelName === 'swagger') {
+          if (apiInfo.path === '/swagger.json') {
+            api[apiInfo.method](apiInfo.path, async (req, res) => {
+              const result = await generateSwaggerDoc({
+                title: 'Demo API document',
+                version: 'v3',
+                description: 'Using swagger3.0 & sequelize to generate document',
+                contact: {
+                  name: 'AlfieriChou',
+                  email: 'alfierichou@gmail.com',
+                  url: 'https://alfierichou.com'
+                },
+                license: {
+                  name: 'MIT',
+                  url: 'https://github.com/AlfieriChou/joi_swagger_three/blob/master/LICENSE'
+                }
+              }, path.resolve(__dirname, '../routes'))
+              res.json(result)
+            })
+          }
+          if (apiInfo.path === '/apidoc') {
+            api[apiInfo.method](apiInfo.path, async (req, res) => {
+              await res.render('index.html', { url: 'swagger.json' })
+            })
+          }
+          return
+        }
         api[apiInfo.method](
           apiInfo.path,
           await checkRoles(apiInfo),
           await validate(apiInfo),
-          controller[modelName][handler]
+          async (req, res) => {
+            const ctx = { req, res }
+            ctx.throw = (status, message, options = {}) => res.status(status).send({
+              status,
+              message,
+              ...options
+            })
+            const ret = await controller[modelName][handler](ctx)
+            res.json({
+              status: 200,
+              message: 'success',
+              result: ret
+            })
+          }
         )
       }, Promise.resolve())
   })

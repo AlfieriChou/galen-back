@@ -3,73 +3,55 @@ const BaseController = require('../common/baseController')
 
 class UserController extends BaseController {
   // eslint-disable-next-line class-methods-use-this
-  async index (req, res) {
+  async index (ctx) {
     // const params = req.query
-    res.json('hello')
+    return 'hello'
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async create (req, res) {
-    const params = req.body
-    res.json(params)
+  async create (ctx) {
+    return ctx.req.body
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async show (req, res) {
-    res.json('hello')
+  async show (ctx) {
+    return 'hello'
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async update (req, res) {
-    res.json('hello')
+  async update (ctx) {
+    return 'hello'
   }
 
   // eslint-disable-next-line consistent-return
-  async register (req, res) {
-    const { body: { phone, password } } = req
+  async register (ctx) {
+    const { req: { body: { phone, password } } } = ctx
     const user = await super.db.User.findOne({ where: { phone } })
     if (user) {
-      return res.status(400).send({
-        status: 400,
-        message: 'user is registered'
-      })
+      ctx.throw(400, 'user is registered')
     }
     const ret = await super.db.User.create({
       phone,
       password: await generateHash(password)
     })
-    res.json({
-      status: 200,
-      message: 'user registered',
-      result: ret
-    })
+    return ret
   }
 
   // eslint-disable-next-line consistent-return
-  async login (req, res) {
-    const { body: { phone, password } } = req
+  async login (ctx) {
+    const { req: { body: { phone, password } } } = ctx
     const user = await super.db.User.findOne({ where: { phone } })
     if (!user) {
-      return res.status(400).send({
-        status: 400,
-        message: 'user not registered'
-      })
+      ctx.throw(400, 'user not registered')
     }
     if (!verifyPassword(user.password, password)) {
-      return res.status(400).send({
-        status: 400,
-        message: 'password error'
-      })
+      ctx.throw(400, 'password error')
     }
     const token = super.createToken({ phone })
-    res.json({
-      status: 200,
-      message: 'login success',
-      result: {
-        user,
-        token
-      }
-    })
+    return {
+      user,
+      token
+    }
   }
 }
 
