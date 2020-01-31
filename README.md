@@ -1,7 +1,7 @@
 [![standard][standard-image]][standard-url]
 
-[![Build Status](https://github.com/AlfieriChou/sequelize-swagger2.0/workflows/Node%20CI/badge.svg?branch=master&event=push)](https://github.com/AlfieriChou/sequelize-swagger2.0/actions)
-[![Greenkeeper badge](https://badges.greenkeeper.io/AlfieriChou/sequelize-swagger2.0.svg)](https://greenkeeper.io/)
+[![Build Status](https://github.com/AlfieriChou/galen/workflows/Node%20CI/badge.svg?branch=master&event=push)](https://github.com/AlfieriChou/galen/actions)
+[![Greenkeeper badge](https://badges.greenkeeper.io/AlfieriChou/galen.svg)](https://greenkeeper.io/)
 [![license][license-image]][license-url]
 
 # How to write swagger document in Sequelize
@@ -77,6 +77,9 @@
 
 * method
   * Interface request method.
+
+* roles
+  * api roles
 
 * tags
   * Interface tag.
