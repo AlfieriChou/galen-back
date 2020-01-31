@@ -1,3 +1,5 @@
+const logger = require('./logger')
+
 const getSort = (options) => {
   const orders = options.split(',')
   return orders.reduce((result, item) => {
@@ -13,6 +15,7 @@ const getSort = (options) => {
 class BaseService {
   constructor () {
     this.getSort = getSort
+    this.logger = logger
   }
 }
 

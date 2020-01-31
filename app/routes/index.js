@@ -5,6 +5,7 @@ const { Validator } = require('jsonschema')
 const { convert } = require('../common/transform')
 const controller = require('../controller')
 const generateSwaggerDoc = require('../common/swagger')
+const logger = require('../common/logger')
 
 const api = express.Router()
 const v = new Validator()
@@ -89,6 +90,7 @@ dir(path.resolve(__dirname, './'))
           await validate(apiInfo),
           async (req, res) => {
             const ctx = { req, res }
+            ctx.logger = logger
             ctx.throw = (status, message, options = {}) => res.status(status).send({
               status,
               message,

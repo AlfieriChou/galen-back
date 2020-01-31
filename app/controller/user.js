@@ -23,7 +23,6 @@ class UserController extends BaseController {
     return 'hello'
   }
 
-  // eslint-disable-next-line consistent-return
   async register (ctx) {
     const { req: { body: { phone, password } } } = ctx
     const user = await super.db.User.findOne({ where: { phone } })
@@ -37,7 +36,6 @@ class UserController extends BaseController {
     return ret
   }
 
-  // eslint-disable-next-line consistent-return
   async login (ctx) {
     const { req: { body: { phone, password } } } = ctx
     const user = await super.db.User.findOne({ where: { phone } })
