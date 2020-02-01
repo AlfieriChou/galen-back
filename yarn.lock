@@ -2262,10 +2262,10 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-expire-store@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/expire-store/-/expire-store-1.0.1.tgz#d9687bec48e77ea5e3fdd0ce1d461a5a5144f89e"
-  integrity sha512-va8lw3N4HZPxz1hsncT3Cvb3edumrwpNpUmnI9odr/5LNA1JGIeWIVq9OlbY0S3D1igSFhJMyQipmPIdG+5veg==
+expire-store@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/expire-store/-/expire-store-1.0.2.tgz#4f87023fd4561560455e2dfbe12d919a464806f1"
+  integrity sha512-9FUz35m/0y/cU8zQTbwdGPWtSC/Fj4ESdzUMl00bEufixF4ITxX59abD6LQMKmYrOmEXQJcy6em/IjCkkCckEg==
 
 express@4.17.1:
   version "4.17.1"

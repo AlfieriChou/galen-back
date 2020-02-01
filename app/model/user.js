@@ -9,5 +9,12 @@ module.exports = function (sequelize, DataTypes) {
     tableName: 'user'
   })
 
+  User.associate = (models) => {
+    User.belongsToMany(models.Role, {
+      through: 'user_role',
+      foreignKey: 'roleId'
+    })
+  }
+
   return User
 }

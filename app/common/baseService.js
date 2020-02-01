@@ -1,4 +1,5 @@
 const logger = require('./logger')
+const db = require('../model')
 
 const getSort = (options) => {
   const orders = options.split(',')
@@ -16,6 +17,11 @@ class BaseService {
   constructor () {
     this.getSort = getSort
     this.logger = logger
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get db () {
+    return db
   }
 }
 
