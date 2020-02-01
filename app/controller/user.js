@@ -1,5 +1,4 @@
-const { verifyPassword, generateHash } = require('../common/brypt')
-const BaseController = require('../common/baseController')
+const { BaseController, verifyPassword, generateHash } = require('../common')
 
 class UserController extends BaseController {
   // eslint-disable-next-line class-methods-use-this

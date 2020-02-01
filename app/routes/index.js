@@ -2,10 +2,10 @@ const dir = require('dir_filenames')
 const path = require('path')
 const express = require('express')
 const { Validator } = require('jsonschema')
-const { convert } = require('../common/transform')
 const controller = require('../controller')
-const generateSwaggerDoc = require('../common/swagger')
-const logger = require('../common/logger')
+const {
+  logger, generateSwaggerDoc, convert, camelizeKeys
+} = require('../common')
 
 const api = express.Router()
 const v = new Validator()
@@ -100,7 +100,7 @@ dir(path.resolve(__dirname, './'))
             res.json({
               status: 200,
               message: 'success',
-              result: ret
+              result: camelizeKeys(ret)
             })
           }
         )

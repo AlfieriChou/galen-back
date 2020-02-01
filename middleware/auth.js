@@ -1,4 +1,5 @@
 const service = require('../app/service')
+const { camelizeKeys } = require('../app/common')
 
 module.exports = async (req, res, next) => {
   if (!req.user) {
@@ -7,8 +8,8 @@ module.exports = async (req, res, next) => {
   }
   const { phone } = req.user
   const user = await service.user.cacheGetUserByPhone(phone)
-  req.user = user
-  req.user.roles = user.Roles.map(({ code }) => code)
-  req.roles = (req.user.roles || []).concat('$everyone', '$authenticated')
+  req.user = camelizeKeys(user)
+  req.user.stateUserRoles = camelizeKeys(user).roles.map(({ code }) => code)
+  req.roles = (req.user.stateUserRoles || []).concat('$everyone', '$authenticated')
   return next()
 }

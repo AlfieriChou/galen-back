@@ -4,7 +4,7 @@ module.exports = function (sequelize, DataTypes) {
 
   }, {
     underscored: true,
-    tableName: 'userRole'
+    tableName: 'user_role'
   })
 
   UserRole.associate = (models) => {
