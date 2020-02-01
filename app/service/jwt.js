@@ -1,26 +1,20 @@
 const jwt = require('jsonwebtoken')
+const ExpireStore = require('expire-store')
 const config = require('../../config')
-const expireStore = require('../common/expireStore')
 
 class JWTAuthService {
-  // eslint-disable-next-line class-methods-use-this
-  createToken (data, key) {
-    return jwt.sign(data, key, {
-      algorithm: 'RS256'
-    })
+  constructor () {
+    this.verifyTokenStore = new ExpireStore(20000)
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async verifyToken (token) {
-    let payload = JWTAuthService.verifyTokenStore[token]
+    let payload = this.verifyTokenStore.get(token)
     if (typeof payload === 'undefined') {
       payload = await jwt.verify(token, config.jwt.publicKey, { algorithms: ['RS256'] })
-      JWTAuthService.verifyTokenStore[token] = payload
+      this.verifyTokenStore.set(token, payload)
     }
     return payload
   }
 }
-
-JWTAuthService.verifyTokenStore = expireStore({}, 20000)
 
 module.exports = new JWTAuthService()

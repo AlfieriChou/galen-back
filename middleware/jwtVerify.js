@@ -1,14 +1,14 @@
+const ExpireStore = require('expire-store')
 const service = require('../app/service')
-const expireStore = require('../app/common/expireStore')
 
-const sessionStore = expireStore({}, 60000)
+const sessionStore = new ExpireStore(60000)
 
 module.exports = async (req, res, next) => {
   if (!req.headers.authorization) {
     return next()
   }
   const token = req.headers.authorization
-  let userInfo = sessionStore[token]
+  let userInfo = sessionStore.get(token)
   if (typeof userInfo === 'undefined') {
     try {
       const payload = await service.jwt.verifyToken(token)
@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
         err
       })
     }
-    sessionStore[token] = userInfo
+    sessionStore.set(token, userInfo)
   }
   req.user = userInfo
   return next()
