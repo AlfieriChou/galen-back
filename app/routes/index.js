@@ -2,9 +2,10 @@ const dir = require('dir_filenames')
 const path = require('path')
 const express = require('express')
 const { Validator } = require('jsonschema')
+const _ = require('lodash')
 const controller = require('../controller')
 const {
-  logger, generateSwaggerDoc, convert, camelizeKeys
+  logger, generateSwaggerDoc, convert, camelizeKeys, BaseController
 } = require('../common')
 
 const api = express.Router()
@@ -19,7 +20,7 @@ const checkRoles = async apiInfo => async (req, res, next) => {
   if (!apiInfo.roles) {
     return next()
   }
-  const intersectionRoles = intersection(apiInfo.roles, req.roles = [])
+  const intersectionRoles = intersection(apiInfo.roles, req.roles)
   if (intersectionRoles.length === 0) {
     return res.status(403).send({
       status: 403,
@@ -96,7 +97,12 @@ dir(path.resolve(__dirname, './'))
               message,
               ...options
             })
-            const ret = await controller[modelName][handler](ctx)
+            let ret
+            if (controller[modelName] && controller[modelName][handler]) {
+              ret = await controller[modelName][handler](ctx)
+            } else {
+              ret = await BaseController[handler](ctx, _.upperFirst(modelName))
+            }
             res.json({
               status: 200,
               message: 'success',

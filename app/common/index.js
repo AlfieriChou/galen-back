@@ -1,5 +1,5 @@
 const BaseService = require('./baseService')
-const BaseController = require('./baseService')
+const BaseController = require('./baseController')
 const logger = require('./logger')
 const generateSwaggerDoc = require('./swagger')
 const { verifyPassword, generateHash } = require('./brypt')

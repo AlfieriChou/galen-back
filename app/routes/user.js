@@ -64,7 +64,7 @@ module.exports = {
     },
     output: {
       200: {
-        type: 'number'
+        type: 'array'
       }
     }
   },

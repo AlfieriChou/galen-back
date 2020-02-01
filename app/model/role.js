@@ -4,6 +4,8 @@ module.exports = function (sequelize, DataTypes) {
     name: { type: DataTypes.STRING, comment: '权限名称' },
     code: { type: DataTypes.STRING, comment: '权限编码' }
   }, {
+    timestamps: true,
+    paranoid: true,
     underscored: true,
     tableName: 'role'
   })
