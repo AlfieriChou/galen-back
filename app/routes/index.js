@@ -68,11 +68,11 @@ dir(path.resolve(__dirname, './'))
                 contact: {
                   name: 'AlfieriChou',
                   email: 'alfierichou@gmail.com',
-                  url: 'https://alfierichou.com'
+                  url: 'https://github.com/AlfieriChou/galen'
                 },
                 license: {
                   name: 'MIT',
-                  url: 'https://github.com/AlfieriChou/joi_swagger_three/blob/master/LICENSE'
+                  url: 'https://github.com/AlfieriChou/galen/blob/master/LICENSE'
                 }
               }, path.resolve(__dirname, '../routes'))
               res.json(result)

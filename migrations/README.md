@@ -1,116 +1,76 @@
-### migration
+## migrations
 
-* opt --> create, addColumn, changeColumn, reanmeColumn, removeColumn, drop, addIndex, removeIndex, query
-* table --> opt table
-* column --> table fields
-* field --> field
-* type --> field type
-* after --> field after
-* fieldBefore --> field name before
-* fieldAfter --> field name after
-* sql --> sql
-
-#### create
+### createTable
 
 ```javascript
 {
-    opt: 'create',
-    table: 'goods',
-    column: {
-        id: { type: Sequelize.UUID, primaryKey: true, defaultValue: Sequelize.UUIDV1 },
-        name: { type: Sequelize.STRING },
-        description: { type: Sequelize.TEXT },
-        created_at: { type: Sequelize.DATE, allowNull: false },
-        updated_at: { type: Sequelize.DATE, allowNull: false },
-        deleted_at: { type: Sequelize.DATE }
-    }
+  createTable: {
+    id: { type: Sequelize.UUID, primaryKey: true, defaultValue: Sequelize.UUIDV1 },
+    name: { type: Sequelize.STRING },
+    description: { type: Sequelize.TEXT },
+    created_at: { type: Sequelize.DATE, allowNull: false },
+    updated_at: { type: Sequelize.DATE, allowNull: false },
+    deleted_at: { type: Sequelize.DATE }
+  }
 }
 ```
 
-#### addColumn
+### addColumn
 
 ```javascript
 {
-    opt: 'addColumn',
-    table: 'user',
+  addColumn: {
     field: 'description',
     type: { type: Sequelize.TEXT },
     after: 'avator'
+  }
 }
 ```
 
-#### changeColumn
+### changeColumn
 
 ```javascript
 {
-    opt: 'changeColumn',
-    table: 'user',
+  changeColumn: {
     field: 'description',
     type: {
-        type: Sequelize.STRING
+      type: Sequelize.STRING
     }
+  }
 }
 ```
 
-#### renameColumn
+### renameColumn
 
 ```javascript
 {
-    opt: 'renameColumn',
-    table: 'user',
-    fieldBefore: 'description',
-    fieldAfter: 'descriptions'
+  renameColumn: {
+    before: 'description',
+    after: 'descriptions'
+  }
 }
 ```
 
-#### removeColumn
+### addIndex
 
 ```javascript
 {
-    opt: 'removeColumn',
-    table: 'user',
-    field: 'avator'
-}
-```
-
-#### drop
-
-```javascript
-{
-    opt: 'drop',
-    table: 'user'
-}
-```
-
-#### addIndex
-
-```javascript
-{
-    opt: 'addIndex',
-    table: 'user',
+  addIndex: {
     attributes: ['firstname', 'lastname'],
     options: {
-        indexName: 'SuperDuperIndex',
-        indicesType: 'UNIQUE'
+      indexName: 'SuperDuperIndex',
+      indicesType: 'UNIQUE'
     }
+  }
 }
 ```
 
-#### removeIndex
+### query - 暂时未开放
 
 ```javascript
 {
-    opt: 'removeIndex',
-    table: 'user',
-    attributes: ['firstname']
-}
-```
-
-#### query
-
-```javascript
-{
-    opt: 'query',
+  query: {
     sql: 'ALTER TABLE goods CHANGE name name INT;'
+  }
 }
 ```
