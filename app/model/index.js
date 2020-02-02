@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 const path = require('path')
-const walkSync = require('walk-sync')
+const dir = require('dir_filenames')
 const config = require('../../config')
 
 const sequelize = new Sequelize(config.mysql.database, config.mysql.user, config.mysql.password, {
@@ -14,12 +14,10 @@ const sequelize = new Sequelize(config.mysql.database, config.mysql.user, config
   logging: false
 })
 
-const paths = walkSync(path.resolve(__dirname, './'), {
-  globs: ['**/*.js'],
-  ignore: ['index.js']
-})
+const paths = dir(path.resolve(__dirname, './')).filter(n => !n.endsWith('index.js'))
 const db = paths.reduce((ret, file) => {
-  const model = sequelize.import(path.resolve(__dirname, `./${file}`))
+  // eslint-disable-next-line global-require, import/no-dynamic-require
+  const model = require(file).createModel(sequelize)
   // eslint-disable-next-line no-param-reassign
   ret[model.name] = model
   return ret

@@ -1,20 +1,32 @@
-// eslint-disable-next-line func-names
-module.exports = function (sequelize, DataTypes) {
-  const User = sequelize.define('User', {
-    phone: { type: DataTypes.STRING, comment: '手机号' },
-    password: { type: DataTypes.STRING, comment: '密码' },
-    nickname: { type: DataTypes.STRING, comment: '昵称' }
-  }, {
-    underscored: true,
-    tableName: 'user'
-  })
+const Sequelize = require('sequelize')
 
-  User.associate = (models) => {
-    User.belongsToMany(models.Role, {
-      through: 'UserRole',
-      foreignKey: 'roleId'
+const model = {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+  phone: { type: Sequelize.STRING, length: 11, comment: '手机号' },
+  password: { type: Sequelize.STRING, length: 32, comment: '密码' },
+  nickname: { type: Sequelize.STRING, length: 32, comment: '昵称' },
+  createdAt: { type: Sequelize.DATE, allowNull: false },
+  updatedAt: { type: Sequelize.DATE, allowNull: false },
+  deletedAt: { type: Sequelize.DATE }
+}
+
+module.exports = {
+  migrations: {
+    createTable: model
+  },
+  createModel: (sequelize) => {
+    const User = sequelize.define('User', model, {
+      underscored: true,
+      tableName: 'user'
     })
-  }
 
-  return User
+    User.associate = (models) => {
+      User.belongsToMany(models.Role, {
+        through: 'UserRole',
+        foreignKey: 'roleId'
+      })
+    }
+
+    return User
+  }
 }
