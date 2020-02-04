@@ -2,12 +2,6 @@ const { BaseController, verifyPassword, generateHash } = require('../common')
 
 class UserController extends BaseController {
   // eslint-disable-next-line class-methods-use-this
-  async index (ctx) {
-    // const params = req.query
-    return 'hello'
-  }
-
-  // eslint-disable-next-line class-methods-use-this
   async create (ctx) {
     return ctx.req.body
   }

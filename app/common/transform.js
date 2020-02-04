@@ -123,15 +123,9 @@ const property = (attribute, options) => {
     return attribute.keys ? convert(attribute.keys) : { type: 'object', properties: {} }
   }
   if (attribute.type.key === 'ARRAY') {
-    // eslint-disable-next-line no-nested-ternary
-    return type.type ? {
+    return {
       type: 'array',
-      items: property({ type: type.type })
-    } : attribute.items ? {
-      type: 'array',
-      items: convert(attribute.items)
-    } : {
-      type: 'array',
+      items: attribute.items ? property(attribute.items) : {},
       description: comment
     }
   }

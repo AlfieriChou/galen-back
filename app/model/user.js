@@ -21,6 +21,7 @@ module.exports = {
     })
 
     User.associate = (models) => {
+      User.hasMany(models.UserRole)
       User.belongsToMany(models.Role, {
         through: 'UserRole',
         foreignKey: 'roleId'

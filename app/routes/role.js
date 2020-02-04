@@ -20,7 +20,12 @@ module.exports = {
     output: {
       200: {
         type: 'array',
-        result: Role.rawAttributes
+        result: {
+          count: { type: Sequelize.INTEGER, comment: '总数' },
+          offset: { type: Sequelize.INTEGER, comment: '偏移量' },
+          limit: { type: Sequelize.INTEGER, comment: '限制数量' },
+          datas: { type: Sequelize.ARRAY, items: { type: Sequelize.JSON, keys: Role.rawAttributes }, comment: '数据' }
+        }
       }
     }
   },

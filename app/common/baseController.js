@@ -1,11 +1,17 @@
 const jwt = require('jsonwebtoken')
 const db = require('../model')
 const config = require('../../config')
+const parseQuery = require('./parseQueryFilter')
 
 class BaseController {
   // eslint-disable-next-line class-methods-use-this
   get db () {
     return db
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get parseQuery () {
+    return parseQuery
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -17,7 +23,14 @@ class BaseController {
   }
 
   static async index (ctx, modelName) {
-    return 'hello'
+    const { req: { query } } = ctx
+    const filter = parseQuery(query)
+    return {
+      count: await db[modelName].count(filter),
+      offset: parseInt(query.offset, 10) || 0,
+      limit: parseInt(query.limit, 10) || 10,
+      datas: await db[modelName].findAll(filter)
+    }
   }
 
   static async create (ctx, modelName) {
