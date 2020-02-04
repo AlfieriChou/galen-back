@@ -103,7 +103,7 @@ const parseQuery = (query) => {
   if (include) {
     const includes = Array.isArray(include)
       ? include.map(o => (_.isObject(o) ? o : JSON.parse(o))) : JSON.parse(include)
-    filter.include = parseIncludes(includes, db)
+    filter.include = parseIncludes(includes)
   }
 
   if (order) {
