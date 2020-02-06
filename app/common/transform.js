@@ -120,7 +120,9 @@ const property = (attribute, options) => {
     }
   }
   if (attribute.type.key === 'JSON') {
-    return attribute.keys ? convert(attribute.keys) : { type: 'object', properties: {} }
+    return attribute.keys
+      ? { ...convert(attribute.keys), description: comment }
+      : { type: 'object', properties: {}, description: comment }
   }
   if (attribute.type.key === 'ARRAY') {
     return {

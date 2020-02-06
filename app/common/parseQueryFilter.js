@@ -67,7 +67,6 @@ const parseIncludes = datas => datas.map((data) => {
       key => optAliases[key] || key
     )
   }
-  // eslint-disable-next-line no-param-reassign
   if (include) {
     return {
       ...data,
@@ -90,7 +89,7 @@ const parseQuery = (query) => {
   }
 
   const {
-    where, include, order, attributes, offset, limit
+    where = {}, include, order, attributes, offset, limit
   } = query
 
   if (where) {

@@ -11,12 +11,14 @@ module.exports = {
     method: 'get',
     tags: ['user'],
     summary: '获取用户列表',
-    query: Object.assign(
-      _.pick(User.rawAttributes, ['nickname']),
-      {
-        sort: { type: Sequelize.STRING, comment: '排序 例如：created_at和-created_at' }
-      }
-    ),
+    query: {
+      where: { type: Sequelize.JSON, comment: '搜索条件 例如：where={}' },
+      order: { type: Sequelize.ARRAY, comment: '排序 例如：order=[["createdAt","desc"]]' },
+      attribute: { type: Sequelize.ARRAY, comment: '返回字段控制 例如：attribute=["id"]' },
+      include: { type: Sequelize.ARRAY, comment: '关联表 关联查询 例如：include=[{"model":"UserRole"}]' },
+      offset: { type: Sequelize.INTEGER, comment: '分页偏移量 例如：offset=0' },
+      limit: { type: Sequelize.INTEGER, comment: '分页数量 例如：limit=20' }
+    },
     output: {
       200: {
         type: 'object',

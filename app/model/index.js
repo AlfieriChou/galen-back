@@ -1,10 +1,14 @@
 const Sequelize = require('sequelize')
 const path = require('path')
 const dir = require('dir_filenames')
-const config = require('../../config')
+const {
+  mysql: {
+    host, database, user, password
+  }
+} = require('../../config')
 
-const sequelize = new Sequelize(config.mysql.database, config.mysql.user, config.mysql.password, {
-  host: config.mysql.host,
+const sequelize = new Sequelize(database, user, password, {
+  host,
   dialect: 'mysql',
   pool: {
     max: 10,

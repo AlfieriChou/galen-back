@@ -1,7 +1,30 @@
 const dir = require('dir_filenames')
 const path = require('path')
 const _ = require('lodash')
-const queryInterface = require('.')
+const Sequelize = require('sequelize')
+
+let env = process.argv[2]
+if (!env) env = 'default'
+const configPath = path.join(__dirname, '../config', `config.${env}.js`)
+const {
+  mysql: {
+    host, database, user, password
+  }
+// eslint-disable-next-line global-require, import/no-dynamic-require
+} = require(configPath)
+
+const sequelize = new Sequelize(database, user, password, {
+  host,
+  dialect: 'mysql',
+  pool: {
+    max: 10,
+    min: 0,
+    idle: 10000
+  },
+  logging: false
+})
+
+const queryInterface = sequelize.getQueryInterface()
 
 const baseOptArr = ['createTable', 'addColumn', 'changeColumn', 'renameColumn', 'addIndex']
 
