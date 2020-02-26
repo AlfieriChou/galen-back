@@ -1,0 +1,45 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - '*'
+  schedule:
+    - cron: '0 2 * * 0' # Weekly at 02:00
+
+jobs:
+  - test
+  - push-docker
+
+test:
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+      node-version: [12.x]
+  steps:
+  - uses: actions/checkout@v1
+  - name: Use Node.js ${{ matrix.node-version }}
+    uses: actions/setup-node@v1
+    with:
+      node-version: ${{ matrix.node-version }}
+  - name: npm install, build, and test
+    run: |
+      npm install yarn -g
+      yarn
+      yarn run test
+    env:
+      CI: true
+
+push-docker:
+  runs-on: ubuntu-latest
+  if: github.ref == 'refs/heads/master'
+  steps:
+  - uses: actions/checkout@master
+  - name: Publish to Registry
+    uses: elgohr/Publish-Docker-Github-Action@master
+    with:
+      name: alfierichou/galen
+      username: ${{ secrets.DOCKER_USERNAME }}
+      password: ${{ secrets.DOCKER_PASSWORD }}
+      cache: ${{ github.event_name != 'schedule' }}
+      tag_names: true
