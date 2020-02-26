@@ -25,3 +25,15 @@ cert:
 	openssl rsa -in $(CERT_DIR)/private.key -pubout -out $(CERT_DIR)/public.pem
 	base64 $(CERT_DIR)/public.pem
 	rm -rf $(CERT_DIR)
+
+version-major:
+	@yarn run release -- --release-as major
+	@git push --follow-tags origin master
+
+version-minor:
+	@yarn run release -- --release-as minor
+	@git push --follow-tags origin master
+
+version-release:
+	@yarn run release -- --release
+	@git push --follow-tags origin master
