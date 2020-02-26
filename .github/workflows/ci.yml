@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - '*'
+      - '!master'
   schedule:
     - cron: '0 2 * * 0' # Weekly at 02:00
 
