@@ -4,7 +4,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
+    - cron: '0 2 * * 0' # Weekly at 02:00
 jobs:
   push-docker:
     runs-on: ubuntu-latest

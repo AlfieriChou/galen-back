@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/AlfieriChou/galen#readme",
   "dependencies": {
-    "bcrypt": "^3.0.7",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "dir_filenames": "^1.0.6",
     "expire-store": "^1.0.2",

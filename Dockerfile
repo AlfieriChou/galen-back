@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
 
-RUN apk add python && yarn
+RUN yarn
 
 COPY . .
 
