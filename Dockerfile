@@ -1,10 +1,12 @@
 FROM node:lts-alpine3.9
 
-RUN mkdir /home/app/
-WORKDIR /home/app/
-ADD . /home/app/
+WORKDIR /usr/src/app
 
-RUN cd /home/app/ && npm install yarn -g && yarn
+COPY package.json yarn.lock ./
+
+RUN apk add python && yarn
+
+COPY . .
 
 EXPOSE 3000
 
